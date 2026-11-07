@@ -1,0 +1,15 @@
+{
+  "tracking_uri": "https://dagshub.com/Khadija-Bilal244/PhishShieldAI.mlflow",
+  "main_model": {
+    "name": "phishshield-hybrid",
+    "version": "1",
+    "stage": "Staging",
+    "run_id": "26e3fa69751544449b86585b0a1ba10a"
+  },
+  "baseline_model": {
+    "name": "phishshield-baseline-xgboost",
+    "version": "1",
+    "stage": "None",
+    "run_id": "dd5362ac108645e883d8c1f275b7e716"
+  }
+}
