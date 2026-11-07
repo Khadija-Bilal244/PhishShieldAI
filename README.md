@@ -132,6 +132,6 @@ No raw data or model weights are committed to Git. `data/` and `models/` are git
 
 | Member | Roll no. | Responsibilities |
 |---|---|---|
-| Khadija Bilal | 23L-3054 | |
+| Fatima Habib | 23L-0881 | |
 | | | |
 | | | |
