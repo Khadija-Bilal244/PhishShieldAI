@@ -1,0 +1,5 @@
+{
+  "logistic_regression": "57b04e1c49e345f5b4fe2f48b806fb03",
+  "random_forest": "80a117ed8748495cb8df76b836d6a039",
+  "xgboost": "dd5362ac108645e883d8c1f275b7e716"
+}

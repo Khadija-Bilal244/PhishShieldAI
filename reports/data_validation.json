@@ -1,0 +1,52 @@
+{
+  "rows_in": 40000,
+  "checks": {
+    "schema_required_columns": {
+      "passed": true,
+      "missing": []
+    },
+    "schema_label_numeric": {
+      "passed": true,
+      "non_numeric": 0
+    },
+    "nulls": {
+      "passed": true,
+      "null_rows": 0,
+      "null_ratio": 0.0
+    },
+    "range_label": {
+      "passed": true,
+      "out_of_range": 0
+    },
+    "range_url_length": {
+      "passed": true,
+      "dropped": 3,
+      "min": 14,
+      "max": 4274,
+      "mean": 35.5
+    },
+    "format_url": {
+      "passed": true,
+      "malformed": 0,
+      "scheme_added": 0
+    },
+    "duplicates": {
+      "passed": true,
+      "duplicates": 13
+    },
+    "conflicting_labels": {
+      "passed": true,
+      "conflicting_urls": 0
+    },
+    "range_class_balance": {
+      "passed": true,
+      "phishing_ratio": 0.4279
+    },
+    "min_rows": {
+      "passed": true,
+      "rows": 39984
+    }
+  },
+  "rows_out": 39984,
+  "passed": true
+}

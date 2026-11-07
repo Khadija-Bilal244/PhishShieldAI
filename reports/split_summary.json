@@ -1,0 +1,14 @@
+{
+  "train": {
+    "rows": 27988,
+    "phishing_ratio": 0.4279
+  },
+  "val": {
+    "rows": 5998,
+    "phishing_ratio": 0.4278
+  },
+  "test": {
+    "rows": 5998,
+    "phishing_ratio": 0.4278
+  }
+}

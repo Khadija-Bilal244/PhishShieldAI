@@ -1,0 +1,8 @@
+{
+  "source": "phiusiil",
+  "source_url": "https://archive.ics.uci.edu/static/public/967/phiusiil+phishing+url+dataset.zip",
+  "sha256": "0a639fd03aea6308c5b1c10c92aa23c2ce1505447a9137271865cd0badc9a59a",
+  "rows": 40000,
+  "phishing_ratio": 0.4281,
+  "ingested_at": "2026-11-07T11:12:45+00:00"
+}
