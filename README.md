@@ -56,7 +56,7 @@ All hyper-parameters live in `params.yaml`. DVC re-runs only the stages whose co
 
 ## Setup
 
-Requires Python 3.10–3.12 and Git. The step-by-step guide, including DagsHub, team workflow and Colab, is in **[docs/SETUP.md](docs/SETUP.md)**.
+Requires Python 3.10–3.12 and Git. The step-by-step guide, including DagsHub and Colab, is in **[docs/SETUP.md](docs/SETUP.md)**.
 
 ```bash
 git clone https://github.com/<user>/phishshield-ai.git && cd phishshield-ai
@@ -120,7 +120,7 @@ phishshield-ai/
 ├── tests/                   # pytest unit tests
 ├── notebooks/               # colab_run_pipeline.ipynb
 ├── scripts/                 # bootstrap.sh / bootstrap.ps1 (DVC remote setup)
-├── docs/SETUP.md            # full setup + team workflow
+├── docs/SETUP.md            # full setup guide
 ├── reports/                 # metrics, tables, figures (small, committed)
 ├── data/, models/           # DVC-managed, git-ignored
 └── .github/workflows/ci.yml # lint + tests
@@ -128,10 +128,6 @@ phishshield-ai/
 
 No raw data or model weights are committed to Git. `data/` and `models/` are git-ignored and versioned by DVC.
 
-## Team
+## Author
 
-| Member | Roll no. | Responsibilities |
-|---|---|---|
-| Khadija Bilal | 23L-3054 | |
-| | | |
-| | | |
+Khadija Bilal (23L-3054)

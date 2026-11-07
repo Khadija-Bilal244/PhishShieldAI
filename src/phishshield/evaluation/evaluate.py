@@ -57,7 +57,6 @@ def main() -> None:
 
     results = {n: {**classification_metrics(test.y, p, thresholds[n]), "latency_ms": latency[n]} for n, p in probs.items()}
 
-    # ---------------- DVC metrics + markdown table ----------------
     keep = ("accuracy", "precision", "recall", "f1", "roc_auc", "pr_auc", "fnr", "fpr", "latency_ms")
     save_json({n: {k: round(float(r[k]), 5) for k in keep} for n, r in results.items()}, REPORTS_DIR / "metrics.json")
     lines = ["| Model | Role | Accuracy | Precision | Recall | F1 | ROC-AUC | FNR | Latency (ms) |",
@@ -68,7 +67,6 @@ def main() -> None:
                      f"{r['roc_auc']:.4f} | {r['fnr']:.4f} | {r['latency_ms']:.2f} |")
     (REPORTS_DIR / "model_comparison.md").write_text("\n".join(lines) + "\n")
 
-    # ---------------- figures ----------------
     plt.figure(figsize=(6, 5))
     for n, p in probs.items():
         fpr, tpr, _ = roc_curve(test.y, p)
@@ -91,7 +89,6 @@ def main() -> None:
     plt.savefig(FIG / "confusion_matrices.png", dpi=130)
     plt.close()
 
-    # ---------------- MLflow evaluation run ----------------
     with tracking.run("evaluation-test-set", params["mlflow"]["experiment"], {"n_test": len(test)},
                       {"stage": "evaluation"}):
         for n, r in results.items():

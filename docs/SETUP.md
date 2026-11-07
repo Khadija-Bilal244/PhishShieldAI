@@ -19,7 +19,7 @@ pytest                              # all tests should pass
 
 If PowerShell blocks activation, run `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`.
 
-## 2. GitHub repository (group leader)
+## 2. GitHub repository
 
 1. Create an **empty public** repo `phishshield-ai` on GitHub (no README).
 2. Then:
@@ -33,15 +33,12 @@ git remote add origin https://github.com/<user>/phishshield-ai.git
 git push -u origin main
 ```
 
-3. **Settings → Collaborators → Add people**: add every group member.
-
 ## 3. DagsHub (DVC remote + MLflow server)
 
 1. Sign up at https://dagshub.com **with GitHub**.
 2. **Create → New Repository → Connect a repository → GitHub** and pick `phishshield-ai`. DagsHub mirrors it.
-3. **Settings → Collaborators** on DagsHub: add the group members.
-4. Token: avatar → **Your Settings → Tokens** and copy it.
-5. Fill in `.env`:
+3. Token: avatar → **Your Settings → Tokens** and copy it.
+4. Fill in `.env`:
 
 ```powershell
 copy .env.example .env               # Linux/macOS: cp .env.example .env
@@ -91,31 +88,23 @@ transformer. Afterwards run `dvc repro -f train_hybrid` without the variable, be
 | MLflow UI → **Models** | `phishshield-hybrid` version 1 in **Staging**, and `phishshield-baseline-xgboost` |
 | Terminal: `dvc repro` | `Data and pipelines are up to date` (reproducible) |
 
-## 7. Team workflow (every member needs commits)
+## 7. Updating the project
 
-Each member clones the repo, does steps 1 and 4 (with their own DagsHub token), and works on a branch:
+After the initial setup, pull the latest versioned data if needed, make your changes, and push the updated project:
 
 ```powershell
-git clone https://github.com/<leader>/phishshield-ai.git
-cd phishshield-ai
 dvc pull
-git checkout -b <name>/<task>
-# ... make the change ...
-git add <files>
-git commit -m "Clear message"
-git push -u origin <name>/<task>
+git add .
+git commit -m "Describe the update"
+git push
 ```
 
-Open a **Pull Request** on GitHub, let CI go green, and merge it. A suggested split so everyone has meaningful commits:
+Configure Git with the name and email associated with your GitHub account so your commits are attributed correctly:
 
-| Member | Owns | Example commits |
-|---|---|---|
-| A | Data: `data/ingest.py`, `validate.py`, `split.py` | add a validation check, tune `validation` params |
-| B | Baselines + features: `features/`, `models/baselines.py` | add a feature, tune XGBoost params, write tests |
-| C | Main model + MLflow: `models/hybrid.py`, `training/`, `registry/` | GPU run, MLflow registration, README results |
-
-Use your **own** Git identity on your own laptop (`git config --global user.name/user.email` with the email of your
-GitHub account) so the commits count for you.
+```powershell
+git config --global user.name "Your Name"
+git config --global user.email "your-email@example.com"
+```
 
 ## 8. Screenshots for the PDF
 

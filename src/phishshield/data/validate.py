@@ -33,7 +33,6 @@ def _check(report: dict, name: str, passed: bool, **details) -> None:
 def validate(df: pd.DataFrame, cfg: dict) -> tuple[pd.DataFrame, dict]:
     report: dict = {"rows_in": int(len(df)), "checks": {}}
 
-    # ---------- schema ----------
     missing = [c for c in cfg["required_columns"] if c not in df.columns]
     _check(report, "schema_required_columns", not missing, missing=missing)
     if missing:
@@ -44,7 +43,6 @@ def validate(df: pd.DataFrame, cfg: dict) -> tuple[pd.DataFrame, dict]:
            non_numeric=int(label_numeric.isna().sum() - df["label"].isna().sum()))
     df = df.assign(label=label_numeric)
 
-    # ---------- nulls ----------
     null_rows = df[cfg["required_columns"]].isna().any(axis=1)
     _check(report, "nulls", null_rows.mean() <= cfg["max_null_ratio"],
            null_rows=int(null_rows.sum()), null_ratio=round(float(null_rows.mean()), 5))
@@ -52,7 +50,6 @@ def validate(df: pd.DataFrame, cfg: dict) -> tuple[pd.DataFrame, dict]:
     df["url"] = df["url"].astype(str).str.strip()
     df["label"] = df["label"].astype(int)
 
-    # ---------- ranges ----------
     bad_label = ~df["label"].isin(cfg["allowed_labels"])
     _check(report, "range_label", not bad_label.any(), out_of_range=int(bad_label.sum()))
     df = df[~bad_label]
@@ -72,7 +69,6 @@ def validate(df: pd.DataFrame, cfg: dict) -> tuple[pd.DataFrame, dict]:
            scheme_added=int(no_scheme.sum()))
     df = df[~bad_fmt]
 
-    # ---------- duplicates / conflicts ----------
     dup = df.duplicated("url")
     _check(report, "duplicates", dup.mean() <= cfg["max_duplicate_ratio"], duplicates=int(dup.sum()))
     conflicts = df.groupby("url")["label"].nunique()
@@ -80,7 +76,6 @@ def validate(df: pd.DataFrame, cfg: dict) -> tuple[pd.DataFrame, dict]:
     _check(report, "conflicting_labels", True, conflicting_urls=len(conflict_urls))
     df = df[~df["url"].isin(conflict_urls)].drop_duplicates("url")
 
-    # ---------- dataset-level ----------
     ratio = float(df["label"].mean()) if len(df) else 0.0
     _check(report, "range_class_balance", cfg["min_class_ratio"] <= ratio <= 1 - cfg["min_class_ratio"],
            phishing_ratio=round(ratio, 4))

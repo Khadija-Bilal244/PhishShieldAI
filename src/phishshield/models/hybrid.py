@@ -94,7 +94,6 @@ class HybridPhishModel(nn.Module):
         z, _ = self.fused(input_ids, attention_mask, features)
         return self.head(z).squeeze(-1)
 
-    # ---------- partial fine-tuning support (tier 2 of the update policy) ----------
     def freeze_lower_layers(self, n_frozen: int) -> None:
         """Freeze embeddings + the lowest `n_frozen` transformer layers."""
         for p in self.encoder.embeddings.parameters():
