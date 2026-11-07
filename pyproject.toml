@@ -8,7 +8,7 @@ version = "1.0.0"
 description = "PhishShield AI - drift-aware hybrid transformer framework for adaptive phishing URL detection"
 readme = "README.md"
 requires-python = ">=3.10"
-authors = [{ name = "Fatima Habib" }]
+authors = [{ name = "Khadija Bilal" }]
 
 [tool.setuptools.packages.find]
 where = ["src"]
