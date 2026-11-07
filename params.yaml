@@ -1,0 +1,67 @@
+# ============================================================
+# PhishShield AI - all pipeline parameters (tracked by DVC).
+# Changing a value makes `dvc repro` re-run only the stages that use it.
+# ============================================================
+
+seed: 42
+
+data:
+  # phiusiil -> real PhiUSIIL Phishing URL Dataset (UCI, 2024), downloaded from its source
+  # sample   -> synthetic offline dataset (only for quick tests without internet)
+  source: phiusiil
+  url: https://archive.ics.uci.edu/static/public/967/phiusiil+phishing+url+dataset.zip
+  max_rows: 40000             # stratified subsample of the 235k URLs (keeps GPU/CPU time reasonable); null = all
+  sample_size: 12000          # only for source: sample
+  n_periods: 6                # only for source: sample
+
+validation:
+  required_columns: [url, label]
+  min_url_length: 4
+  max_url_length: 2048
+  allowed_labels: [0, 1]
+  min_rows: 1000
+  min_class_ratio: 0.05       # each class must be at least 5% of the data
+  max_duplicate_ratio: 0.10   # fail if more than 10% of rows are duplicate URLs
+  max_null_ratio: 0.01        # fail if more than 1% of rows have nulls in required columns
+
+split:
+  test_size: 0.15
+  val_size: 0.15              # stratified train / val / test = 70 / 15 / 15
+
+baselines:
+  logistic_regression:
+    C: 1.0
+    max_iter: 2000
+  random_forest:
+    n_estimators: 300
+    max_depth: 20
+  xgboost:
+    n_estimators: 400
+    max_depth: 6
+    learning_rate: 0.1
+    subsample: 0.9
+    colsample_bytree: 0.9
+
+hybrid:                       # MAIN MODEL: DistilBERT + engineered-feature gated fusion
+  pretrained_name: distilbert-base-uncased
+  debug_tiny: false           # true = 2-layer transformer built offline (CPU smoke tests only)
+  mode: fusion                # fusion | text_only | features_only
+  max_len: 64
+  batch_size: 32
+  epochs: 3
+  lr: 3.0e-5
+  head_lr: 1.0e-3
+  weight_decay: 0.01
+  fusion_dim: 128
+  dropout: 0.1
+  max_train_samples: null     # cap training rows (e.g. 8000 on a CPU laptop); null = all
+  freeze_layers_partial: 4
+
+evaluation:
+  max_fnr: 0.15               # safety limit on false-negative rate used to pick the decision threshold
+
+mlflow:
+  experiment: phishshield-ai
+  main_model_name: phishshield-hybrid
+  baseline_model_name: phishshield-baseline-xgboost
+  registry_stage: Staging

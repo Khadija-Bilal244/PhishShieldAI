@@ -1,0 +1,147 @@
+# ==========================================================================
+# PhishShield AI - reproducible core ML pipeline
+#   dvc repro         reproduce everything (only changed stages re-run)
+#   dvc repro -f      force the full pipeline from scratch
+#   dvc dag           pipeline diagram
+#   dvc metrics show  all metrics
+# ==========================================================================
+stages:
+  ingest:
+    desc: Download the PhiUSIIL phishing URL dataset from UCI and map it to the project schema
+    cmd: python -m phishshield.data.ingest
+    deps:
+      - src/phishshield/data/ingest.py
+      - src/phishshield/data/make_sample.py
+    params:
+      - seed
+      - data
+    outs:
+      - data/raw/urls.csv
+    metrics:
+      - reports/ingest.json:
+          cache: false
+
+  validate:
+    desc: Schema, null, range, format and duplicate checks - fails the pipeline on bad data
+    cmd: python -m phishshield.data.validate
+    deps:
+      - src/phishshield/data/validate.py
+      - data/raw/urls.csv
+    params:
+      - validation
+    outs:
+      - data/interim/urls_clean.csv
+    metrics:
+      - reports/data_validation.json:
+          cache: false
+
+  split:
+    desc: Stratified train / validation / test split
+    cmd: python -m phishshield.data.split
+    deps:
+      - src/phishshield/data/split.py
+      - data/interim/urls_clean.csv
+    params:
+      - seed
+      - split
+    outs:
+      - data/processed/train.csv
+      - data/processed/val.csv
+      - data/processed/test.csv
+    metrics:
+      - reports/split_summary.json:
+          cache: false
+
+  featurize:
+    desc: 31 engineered lexical/host URL features + scaler fitted on train only
+    cmd: python -m phishshield.features.build
+    deps:
+      - src/phishshield/features
+      - data/processed/train.csv
+      - data/processed/val.csv
+      - data/processed/test.csv
+    outs:
+      - data/processed/train_features.csv
+      - data/processed/val_features.csv
+      - data/processed/test_features.csv
+      - models/scaler.joblib
+
+  train_baselines:
+    desc: Baselines - Logistic Regression, Random Forest, XGBoost (MLflow-tracked)
+    cmd: python -m phishshield.training.train_baselines
+    deps:
+      - src/phishshield/training/train_baselines.py
+      - src/phishshield/models/baselines.py
+      - data/processed/train_features.csv
+      - data/processed/val_features.csv
+    params:
+      - seed
+      - baselines
+    outs:
+      - models/baselines
+      - reports/runs/baselines.json:
+          cache: false
+    metrics:
+      - reports/baselines_val.json:
+          cache: false
+
+  train_hybrid:
+    desc: Main model - hybrid DistilBERT + engineered-feature gated fusion (MLflow-tracked)
+    cmd: python -m phishshield.training.train_hybrid
+    deps:
+      - src/phishshield/training/train_hybrid.py
+      - src/phishshield/training/hybrid_trainer.py
+      - src/phishshield/models/hybrid.py
+      - src/phishshield/models/pyfunc.py
+      - data/processed/train_features.csv
+      - data/processed/val_features.csv
+      - data/processed/test_features.csv
+      - models/scaler.joblib
+    params:
+      - seed
+      - hybrid
+      - evaluation
+    outs:
+      - models/hybrid
+      - reports/runs/hybrid.json:
+          cache: false
+    metrics:
+      - reports/hybrid_metrics.json:
+          cache: false
+    plots:
+      - reports/figures/hybrid_training_curve.png:
+          cache: false
+
+  evaluate:
+    desc: Compare baselines vs main model on the held-out test set
+    cmd: python -m phishshield.evaluation.evaluate
+    deps:
+      - src/phishshield/evaluation
+      - models/baselines
+      - models/hybrid
+      - data/processed/test_features.csv
+    outs:
+      - reports/model_comparison.md:
+          cache: false
+    metrics:
+      - reports/metrics.json:
+          cache: false
+    plots:
+      - reports/figures/roc_curves.png:
+          cache: false
+      - reports/figures/confusion_matrices.png:
+          cache: false
+
+  register:
+    desc: Register the main model (Staging) and the XGBoost baseline in the MLflow Model Registry
+    cmd: python -m phishshield.registry.register
+    deps:
+      - src/phishshield/registry/register.py
+      - reports/runs/hybrid.json
+      - reports/runs/baselines.json
+      - reports/metrics.json
+    params:
+      - mlflow
+    outs:
+      - reports/registry.json:
+          cache: false

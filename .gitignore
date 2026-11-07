@@ -1,0 +1,38 @@
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# ---- Secrets (NEVER commit) ----
+.env
+
+# ---- Data & models are versioned by DVC, not Git ----
+/data/raw/
+/data/interim/
+/data/processed/
+/models/
+
+# ---- DVC local config holds credentials ----
+.dvc/config.local
+.dvc/tmp
+.dvc/cache
+
+# ---- MLflow local store ----
+mlruns/
+mlartifacts/
+mlflow.db
+
+
+# ---- OS / IDE ----
+.DS_Store
+.idea/
+.vscode/
+*.swp
+
+.venv*/
