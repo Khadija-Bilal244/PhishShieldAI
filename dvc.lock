@@ -5,12 +5,12 @@ stages:
     deps:
     - path: src/phishshield/data/ingest.py
       hash: md5
-      md5: a57533b9d5c5e3e8e79405d308819e1c
-      size: 4154
+      md5: 718c11bd0da12920c59eacee6925cd1c
+      size: 3473
     - path: src/phishshield/data/make_sample.py
       hash: md5
-      md5: c315ecd986eefa7ac1a74df7597e8409
-      size: 12512
+      md5: 7b21a72c6c516b825d3c08c7d15694de
+      size: 11081
     params:
       params.yaml:
         data:
@@ -28,8 +28,8 @@ stages:
       size: 1899986
     - path: reports/ingest.json
       hash: md5
-      md5: 7cc5df8d5ca5151bfb5bb80faa8a91ab
-      size: 296
+      md5: 99071eb7b95107f1787c1099c1650cd8
+      size: 303
   validate:
     cmd: python -m phishshield.data.validate
     deps:
@@ -39,8 +39,8 @@ stages:
       size: 1899986
     - path: src/phishshield/data/validate.py
       hash: md5
-      md5: e32c72a72d54733bae792995ad8ec629
-      size: 4995
+      md5: 3a4173316dc99c628cd494cf27f4b90c
+      size: 4045
     params:
       params.yaml:
         validation:
@@ -63,8 +63,8 @@ stages:
       size: 1886937
     - path: reports/data_validation.json
       hash: md5
-      md5: c129ccc24e9449e4fbd262b1e183863a
-      size: 945
+      md5: c98b43b8351954e69bb2343eaa85deb9
+      size: 996
   split:
     cmd: python -m phishshield.data.split
     deps:
@@ -97,8 +97,8 @@ stages:
       size: 283797
     - path: reports/split_summary.json
       hash: md5
-      md5: 300b78922a8b4b47196db7b13b0163ba
-      size: 195
+      md5: 7ca5184387411847f0fa7e9cbe649b4b
+      size: 208
   featurize:
     cmd: python -m phishshield.features.build
     deps:
@@ -116,8 +116,8 @@ stages:
       size: 283797
     - path: src/phishshield/features
       hash: md5
-      md5: 8aeb8e16245c1340e7504de6821480f3.dir
-      size: 7201
+      md5: ba0d36b61311eeb39d8141281857812c.dir
+      size: 6734
       nfiles: 4
     outs:
     - path: data/processed/test_features.csv
@@ -149,12 +149,12 @@ stages:
       size: 1251232
     - path: src/phishshield/models/baselines.py
       hash: md5
-      md5: bf3348f204e56fd7f504e3b007384df9
-      size: 1443
+      md5: 6d6008f6af02bd0547b975eaffbc8bf3
+      size: 1357
     - path: src/phishshield/training/train_baselines.py
       hash: md5
-      md5: 0da9a4c9b146e48e8223a7de9d6bc31f
-      size: 2646
+      md5: 2caba27d9552cdcb542f54c8c56dbbad
+      size: 2463
     params:
       params.yaml:
         baselines:
@@ -179,12 +179,12 @@ stages:
       nfiles: 3
     - path: reports/baselines_val.json
       hash: md5
-      md5: f868b4f3a5c835d2c9210ce8826cc21c
-      size: 1154
+      md5: f2c72d46b1e1594d3b2b2dc30b876a75
+      size: 1200
     - path: reports/runs/baselines.json
       hash: md5
-      md5: 32febb67b111f45620c1ea9cfe1b1a57
-      size: 167
+      md5: d68c80e9ed961d5a95abfbeb6e411dee
+      size: 171
   train_hybrid:
     cmd: python -m phishshield.training.train_hybrid
     deps:
@@ -206,20 +206,20 @@ stages:
       size: 1343
     - path: src/phishshield/models/hybrid.py
       hash: md5
-      md5: 71f34ba0a96a5585fdf8fdb270539d9f
-      size: 7265
+      md5: e4bdf9927a721958be1856315b1ef46f
+      size: 6389
     - path: src/phishshield/models/pyfunc.py
       hash: md5
-      md5: 4652c2ac34f92b75097ca20822cef126
-      size: 1352
+      md5: 40a30023bc1da7fd505c221d50ac4e5e
+      size: 1162
     - path: src/phishshield/training/hybrid_trainer.py
       hash: md5
       md5: aee5461341e965892e1b563ba5657995
       size: 3769
     - path: src/phishshield/training/train_hybrid.py
       hash: md5
-      md5: 887b3bea91ac64a23a062205f8d21e55
-      size: 5379
+      md5: b64e23006e2cac41406c1448c0223986
+      size: 5050
     params:
       params.yaml:
         evaluation:
@@ -251,12 +251,12 @@ stages:
       size: 47509
     - path: reports/hybrid_metrics.json
       hash: md5
-      md5: 8ea8150d431445a4e7fd7c7f2d0221c0
-      size: 1809
+      md5: 423959ace80b16fd689a6e7e13fe0d48
+      size: 1879
     - path: reports/runs/hybrid.json
       hash: md5
-      md5: b8ae057fba20487ad091a6ebd2dcadcc
-      size: 50
+      md5: 3a596105fe759c796769c480c55bf1de
+      size: 52
   evaluate:
     cmd: python -m phishshield.evaluation.evaluate
     deps:
@@ -276,8 +276,8 @@ stages:
       nfiles: 5
     - path: src/phishshield/evaluation
       hash: md5
-      md5: 607ef65c9d6a0e50a498a5cf45ed7fe8.dir
-      size: 6476
+      md5: 81f88f8903245b29c0108d5253f33b0f.dir
+      size: 5980
       nfiles: 3
     outs:
     - path: reports/figures/confusion_matrices.png
@@ -290,31 +290,31 @@ stages:
       size: 49368
     - path: reports/metrics.json
       hash: md5
-      md5: e19f6be6e91b226d15615bb3ddd7b3a8
-      size: 923
+      md5: 017b53695113ba597d1607f01f2811fa
+      size: 968
     - path: reports/model_comparison.md
       hash: md5
-      md5: c77dca943d2d0ffc9d80a1dc001927f2
-      size: 485
+      md5: 1cea3ae819bac67d1fdb08c8bb87bd4e
+      size: 491
   register:
     cmd: python -m phishshield.registry.register
     deps:
     - path: reports/metrics.json
       hash: md5
-      md5: e19f6be6e91b226d15615bb3ddd7b3a8
-      size: 923
+      md5: 017b53695113ba597d1607f01f2811fa
+      size: 968
     - path: reports/runs/baselines.json
       hash: md5
-      md5: 32febb67b111f45620c1ea9cfe1b1a57
-      size: 167
+      md5: d68c80e9ed961d5a95abfbeb6e411dee
+      size: 171
     - path: reports/runs/hybrid.json
       hash: md5
-      md5: b8ae057fba20487ad091a6ebd2dcadcc
-      size: 50
+      md5: 3a596105fe759c796769c480c55bf1de
+      size: 52
     - path: src/phishshield/registry/register.py
       hash: md5
-      md5: cd72f707a31069628be355050be1e024
-      size: 4643
+      md5: 3c2fc13e575934ba158a50f91d850b4a
+      size: 4012
     params:
       params.yaml:
         mlflow:
@@ -325,5 +325,453 @@ stages:
     outs:
     - path: reports/registry.json
       hash: md5
-      md5: fb0dfcf0aa3e9673f61bc2860ff44ea4
-      size: 392
+      md5: 5cc6a614a8569cfa79c5d9872904ee62
+      size: 406
+  distill:
+    cmd: python -m phishshield.training.distill
+    deps:
+    - path: data/processed/test_features.csv
+      hash: md5
+      md5: da335c5460c0cdc1fa022389ff853928
+      size: 1247423
+    - path: data/processed/train_features.csv
+      hash: md5
+      md5: c85ac1e0f6a1dd40d7bfc11c2a4f5aad
+      size: 5828108
+    - path: data/processed/val_features.csv
+      hash: md5
+      md5: 49bd81819d56fc13138ecf6c038c7107
+      size: 1251232
+    - path: models/hybrid
+      hash: md5
+      md5: b9af6a7ddbefb89c205ebfe732df88dc.dir
+      size: 266807378
+      nfiles: 5
+    - path: models/scaler.joblib
+      hash: md5
+      md5: 9feddf2b5e7c6d5085f96e15b0cdc6e7
+      size: 1343
+    - path: src/phishshield/models/student.py
+      hash: md5
+      md5: f8b8070475524bcc715fabd685f0d9fb
+      size: 3297
+    - path: src/phishshield/models/student_pyfunc.py
+      hash: md5
+      md5: b2528529cfcc878550152ec19cc759a0
+      size: 759
+    - path: src/phishshield/training/calibration.py
+      hash: md5
+      md5: 419f0b740ec573b2f4f68cd3845d3844
+      size: 1116
+    - path: src/phishshield/training/distill.py
+      hash: md5
+      md5: 202a9e371827c150b2ff84b5add32158
+      size: 7075
+    - path: src/phishshield/training/student_trainer.py
+      hash: md5
+      md5: f31d4e002ae7c8e0812c977f36afb369
+      size: 2233
+    params:
+      params.yaml:
+        evaluation:
+          max_fnr: 0.15
+        explain.shap_background: 50
+        seed: 42
+        student:
+          max_len: 128
+          embed_dim: 32
+          num_filters: 64
+          kernel_sizes:
+          - 3
+          - 5
+          - 7
+          epochs: 6
+          batch_size: 128
+          lr: 0.002
+          temperature: 2.0
+          alpha: 0.5
+    outs:
+    - path: models/student
+      hash: md5
+      md5: ec6375f32e4d2ea10609a0b69b895c25.dir
+      size: 428636
+      nfiles: 5
+    - path: reports/runs/student.json
+      hash: md5
+      md5: 76e8fd0f2c4f09364d72fc3c17d7bdcb
+      size: 53
+    - path: reports/student_metrics.json
+      hash: md5
+      md5: 7b6ad29152bda271f70f50c347ccb2c9
+      size: 1126
+  explain:
+    cmd: python -m phishshield.explain.run
+    deps:
+    - path: data/processed/test_features.csv
+      hash: md5
+      md5: da335c5460c0cdc1fa022389ff853928
+      size: 1247423
+    - path: models/hybrid
+      hash: md5
+      md5: b9af6a7ddbefb89c205ebfe732df88dc.dir
+      size: 266807378
+      nfiles: 5
+    - path: models/student
+      hash: md5
+      md5: ec6375f32e4d2ea10609a0b69b895c25.dir
+      size: 428636
+      nfiles: 5
+    - path: src/phishshield/api/predictor.py
+      hash: md5
+      md5: 25cea94498f0303e2879479394ba7ada
+      size: 5481
+    - path: src/phishshield/explain/run.py
+      hash: md5
+      md5: aeb39de826933ad1b25952eca1a7a5a8
+      size: 6485
+    params:
+      params.yaml:
+        explain:
+          n_examples: 12
+          shap_background: 50
+          shap_samples: 300
+    outs:
+    - path: reports/explanations.html
+      hash: md5
+      md5: d02846ae21d742a6fe8a6c89fbe0e2d9
+      size: 23487
+    - path: reports/figures/shap_summary.png
+      hash: md5
+      md5: f30932e819c5d8438aaa57230c1b8948
+      size: 90290
+    - path: reports/shap_importance.json
+      hash: md5
+      md5: 6df0b4fad7cb411ade96780f3a9c76a0
+      size: 821
+  promote:
+    cmd: python -m phishshield.registry.promote
+    deps:
+    - path: models/student
+      hash: md5
+      md5: ec6375f32e4d2ea10609a0b69b895c25.dir
+      size: 428636
+      nfiles: 5
+    - path: src/phishshield/api/predictor.py
+      hash: md5
+      md5: 25cea94498f0303e2879479394ba7ada
+      size: 5481
+    - path: src/phishshield/registry/model_registry.py
+      hash: md5
+      md5: 1273c6999588217b303b380e95a69d95
+      size: 7619
+    - path: src/phishshield/registry/promote.py
+      hash: md5
+      md5: 893891e2e09ea98a1ef543ffd089210b
+      size: 1921
+    params:
+      params.yaml:
+        promotion:
+          primary_metric: f1
+          min_improvement: 0.0
+          max_recall_drop: 0.01
+          max_fnr: 0.15
+        registry:
+          student_model_name: phishshield-student
+    outs:
+    - path: reports/promotion.json
+      hash: md5
+      md5: a266f39eebe95a4c38999ca9cbaba86a
+      size: 407
+  build_stream:
+    cmd: python -m phishshield.data.build_stream
+    deps:
+    - path: data/raw/urls.csv
+      hash: md5
+      md5: 89e1f13ec4e7d7c6bd9f10cb462e7f32
+      size: 1899986
+    - path: src/phishshield/data/build_stream.py
+      hash: md5
+      md5: 1a9cf8c574cda6c96aa2a4c843a087fc
+      size: 2896
+    - path: src/phishshield/data/make_sample.py
+      hash: md5
+      md5: 7b21a72c6c516b825d3c08c7d15694de
+      size: 11081
+    params:
+      params.yaml:
+        seed: 42
+        stream:
+          pool_size: 20000
+          n_batches: 8
+          batch_size: 600
+          max_new_style_share: 0.6
+    outs:
+    - path: data/stream
+      hash: md5
+      md5: 066d3ee7ef5eb93036f2199b090fda81.dir
+      size: 263406
+      nfiles: 8
+    - path: reports/stream_summary.json
+      hash: md5
+      md5: 8b5a3a88238564b99954755d7e9c4361
+      size: 1012
+  drift_eval:
+    cmd: python -m phishshield.drift.drift_eval
+    deps:
+    - path: data/processed/train_features.csv
+      hash: md5
+      md5: c85ac1e0f6a1dd40d7bfc11c2a4f5aad
+      size: 5828108
+    - path: data/stream
+      hash: md5
+      md5: 066d3ee7ef5eb93036f2199b090fda81.dir
+      size: 263406
+      nfiles: 8
+    - path: models/student
+      hash: md5
+      md5: ec6375f32e4d2ea10609a0b69b895c25.dir
+      size: 428636
+      nfiles: 5
+    - path: reports/promotion.json
+      hash: md5
+      md5: a266f39eebe95a4c38999ca9cbaba86a
+      size: 407
+    - path: src/phishshield/drift
+      hash: md5
+      md5: 87234b948dc81e18dae8030eb6e2cc30.dir
+      size: 17254
+      nfiles: 6
+    params:
+      params.yaml:
+        drift:
+          psi_threshold: 0.2
+          ks_pvalue: 0.01
+          mmd_permutations: 200
+          max_samples: 1000
+          weights:
+            feature: 0.35
+            embedding: 0.35
+            performance: 0.3
+          tiers:
+            recalibrate: 0.25
+            partial_finetune: 0.45
+            full_retrain: 0.65
+        promotion.max_fnr: 0.15
+    outs:
+    - path: reports/drift_detection.json
+      hash: md5
+      md5: 1615f136681489af458a6cccc7a96304
+      size: 3363
+    - path: reports/drift_detection.md
+      hash: md5
+      md5: bf03fbc597907e669b03f5f1a39502aa
+      size: 770
+    - path: reports/figures/drift_detection.png
+      hash: md5
+      md5: 1ea12625cf1efb42e5ac06d52bfe4983
+      size: 79917
+  strategy_comparison:
+    cmd: python -m phishshield.experiments.strategy_comparison
+    deps:
+    - path: data/processed/train_features.csv
+      hash: md5
+      md5: c85ac1e0f6a1dd40d7bfc11c2a4f5aad
+      size: 5828108
+    - path: data/stream
+      hash: md5
+      md5: 066d3ee7ef5eb93036f2199b090fda81.dir
+      size: 263406
+      nfiles: 8
+    - path: models/student
+      hash: md5
+      md5: ec6375f32e4d2ea10609a0b69b895c25.dir
+      size: 428636
+      nfiles: 5
+    - path: src/phishshield/drift/embedding_drift.py
+      hash: md5
+      md5: 0131f88614bf32a2588e940c4842b842
+      size: 2576
+    - path: src/phishshield/drift/feature_drift.py
+      hash: md5
+      md5: 214267c08c061cc59df6927ae114897c
+      size: 2914
+    - path: src/phishshield/drift/risk_policy.py
+      hash: md5
+      md5: 6d909e1ef7189a9ab627bdd571d814f3
+      size: 2762
+    - path: src/phishshield/experiments/strategy_comparison.py
+      hash: md5
+      md5: 6382343ca5656f498bacec87b58903ea
+      size: 10356
+    - path: src/phishshield/models/student.py
+      hash: md5
+      md5: f8b8070475524bcc715fabd685f0d9fb
+      size: 3297
+    - path: src/phishshield/training/calibration.py
+      hash: md5
+      md5: 419f0b740ec573b2f4f68cd3845d3844
+      size: 1116
+    - path: src/phishshield/training/student_trainer.py
+      hash: md5
+      md5: f31d4e002ae7c8e0812c977f36afb369
+      size: 2233
+    params:
+      params.yaml:
+        drift:
+          psi_threshold: 0.2
+          ks_pvalue: 0.01
+          mmd_permutations: 200
+          max_samples: 1000
+          weights:
+            feature: 0.35
+            embedding: 0.35
+            performance: 0.3
+          tiers:
+            recalibrate: 0.25
+            partial_finetune: 0.45
+            full_retrain: 0.65
+        experiment:
+          fixed_schedule_every: 2
+        promotion:
+          primary_metric: f1
+          min_improvement: 0.0
+          max_recall_drop: 0.01
+          max_fnr: 0.15
+        seed: 42
+        student:
+          max_len: 128
+          embed_dim: 32
+          num_filters: 64
+          kernel_sizes:
+          - 3
+          - 5
+          - 7
+          epochs: 6
+          batch_size: 128
+          lr: 0.002
+          temperature: 2.0
+          alpha: 0.5
+    outs:
+    - path: reports/figures/strategy_comparison.png
+      hash: md5
+      md5: ffebee3c17295447f54c2fb7125418be
+      size: 78218
+    - path: reports/strategy_comparison.json
+      hash: md5
+      md5: 868f4310a70563d9e0b0632379c32ed1
+      size: 9367
+    - path: reports/strategy_comparison.md
+      hash: md5
+      md5: 06c4f47aebc2164db86ada3973a32f03
+      size: 466
+    - path: reports/strategy_summary.json
+      hash: md5
+      md5: 81820afcf2cf126b7fc5bb0ca22a28f0
+      size: 1171
+  ablation:
+    cmd: python -m phishshield.training.ablation
+    deps:
+    - path: data/processed/test_features.csv
+      hash: md5
+      md5: da335c5460c0cdc1fa022389ff853928
+      size: 1247423
+    - path: data/processed/train_features.csv
+      hash: md5
+      md5: c85ac1e0f6a1dd40d7bfc11c2a4f5aad
+      size: 5828108
+    - path: data/processed/val_features.csv
+      hash: md5
+      md5: 49bd81819d56fc13138ecf6c038c7107
+      size: 1251232
+    - path: reports/hybrid_metrics.json
+      hash: md5
+      md5: 423959ace80b16fd689a6e7e13fe0d48
+      size: 1879
+    - path: src/phishshield/models/hybrid.py
+      hash: md5
+      md5: e4bdf9927a721958be1856315b1ef46f
+      size: 6389
+    - path: src/phishshield/training/ablation.py
+      hash: md5
+      md5: 485a35c78dd8dea3afce801c41cda0f1
+      size: 4060
+    - path: src/phishshield/training/hybrid_trainer.py
+      hash: md5
+      md5: aee5461341e965892e1b563ba5657995
+      size: 3769
+    params:
+      params.yaml:
+        ablation:
+          modes:
+          - text_only
+          - features_only
+        evaluation:
+          max_fnr: 0.15
+        hybrid:
+          pretrained_name: distilbert-base-uncased
+          debug_tiny: false
+          mode: fusion
+          max_len: 64
+          batch_size: 32
+          epochs: 3
+          lr: 3e-05
+          head_lr: 0.001
+          weight_decay: 0.01
+          fusion_dim: 128
+          dropout: 0.1
+          max_train_samples:
+          freeze_layers_partial: 4
+        seed: 42
+    outs:
+    - path: reports/ablation.json
+      hash: md5
+      md5: c078ca711a2bc0310f76599b60e4d05e
+      size: 659
+    - path: reports/ablation.md
+      hash: md5
+      md5: 19b89a9f4e311d856fcb21fe32614546
+      size: 300
+    - path: reports/figures/ablation.png
+      hash: md5
+      md5: 9efdf113ed74ccca52e2e7916b3f17cd
+      size: 31355
+  summary:
+    cmd: python -m phishshield.reporting.summary
+    deps:
+    - path: reports/ablation.md
+      hash: md5
+      md5: 19b89a9f4e311d856fcb21fe32614546
+      size: 300
+    - path: reports/drift_detection.md
+      hash: md5
+      md5: bf03fbc597907e669b03f5f1a39502aa
+      size: 770
+    - path: reports/model_comparison.md
+      hash: md5
+      md5: 1cea3ae819bac67d1fdb08c8bb87bd4e
+      size: 491
+    - path: reports/promotion.json
+      hash: md5
+      md5: a266f39eebe95a4c38999ca9cbaba86a
+      size: 407
+    - path: reports/shap_importance.json
+      hash: md5
+      md5: 6df0b4fad7cb411ade96780f3a9c76a0
+      size: 821
+    - path: reports/strategy_comparison.md
+      hash: md5
+      md5: 06c4f47aebc2164db86ada3973a32f03
+      size: 466
+    - path: reports/student_metrics.json
+      hash: md5
+      md5: 7b6ad29152bda271f70f50c347ccb2c9
+      size: 1126
+    - path: src/phishshield/reporting/summary.py
+      hash: md5
+      md5: fde31bf3acaf81943534c4c8a56f4d03
+      size: 2431
+    outs:
+    - path: reports/final_results.md
+      hash: md5
+      md5: 447544703d8d11f12a985c97ab52d1bf
+      size: 3158

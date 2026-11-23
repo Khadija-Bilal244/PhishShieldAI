@@ -1,4 +1,3 @@
-# pre-commit install   -> runs these checks automatically before every `git commit`
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.6.0

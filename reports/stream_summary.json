@@ -1,0 +1,54 @@
+{
+  "batches": [
+    {
+      "batch": 0,
+      "rows": 600,
+      "new_style_share": 0.0,
+      "phishing_ratio": 0.42
+    },
+    {
+      "batch": 1,
+      "rows": 600,
+      "new_style_share": 0.086,
+      "phishing_ratio": 0.4583
+    },
+    {
+      "batch": 2,
+      "rows": 600,
+      "new_style_share": 0.171,
+      "phishing_ratio": 0.415
+    },
+    {
+      "batch": 3,
+      "rows": 600,
+      "new_style_share": 0.257,
+      "phishing_ratio": 0.4183
+    },
+    {
+      "batch": 4,
+      "rows": 600,
+      "new_style_share": 0.343,
+      "phishing_ratio": 0.4167
+    },
+    {
+      "batch": 5,
+      "rows": 600,
+      "new_style_share": 0.429,
+      "phishing_ratio": 0.455
+    },
+    {
+      "batch": 6,
+      "rows": 600,
+      "new_style_share": 0.514,
+      "phishing_ratio": 0.405
+    },
+    {
+      "batch": 7,
+      "rows": 600,
+      "new_style_share": 0.6,
+      "phishing_ratio": 0.4433
+    }
+  ],
+  "pool_size": 20000,
+  "simulated": true
+}

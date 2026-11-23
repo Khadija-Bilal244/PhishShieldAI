@@ -1,6 +1,4 @@
 #!/usr/bin/env bash
-# One-time project setup: Git + DVC + DagsHub remote. Reads credentials from .env
-#   bash scripts/bootstrap.sh
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
@@ -13,7 +11,6 @@ set -a; source .env; set +a
 if [ -n "${DAGSHUB_USERNAME:-}" ] && [ "${DAGSHUB_USERNAME}" != "your-dagshub-username" ]; then
   REMOTE="https://dagshub.com/${DAGSHUB_USERNAME}/${DAGSHUB_REPO}.dvc"
   dvc remote add -d -f origin "$REMOTE"
-  # credentials go to .dvc/config.local (never committed)
   dvc remote modify origin --local auth basic
   dvc remote modify origin --local user "$DAGSHUB_USERNAME"
   dvc remote modify origin --local password "$DAGSHUB_TOKEN"

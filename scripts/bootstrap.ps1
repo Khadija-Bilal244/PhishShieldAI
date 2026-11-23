@@ -1,5 +1,3 @@
-# One-time project setup for Windows PowerShell: Git + DVC + DagsHub remote. Reads .env
-#   powershell -ExecutionPolicy Bypass -File scripts\bootstrap.ps1
 $ErrorActionPreference = "Stop"
 Set-Location (Split-Path $PSScriptRoot -Parent)
 

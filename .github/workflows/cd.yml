@@ -1,0 +1,76 @@
+name: CD
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build-and-push:
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    env:
+      DAGSHUB_USERNAME: ${{ secrets.DAGSHUB_USERNAME }}
+      DAGSHUB_TOKEN: ${{ secrets.DAGSHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11"}
+      - name: Pull the champion model from DagsHub
+        run: |
+          pip install "dvc>=3.50"
+          dvc remote modify origin --local auth basic
+          dvc remote modify origin --local user "$DAGSHUB_USERNAME"
+          dvc remote modify origin --local password "$DAGSHUB_TOKEN"
+          dvc pull models/registry.dvc
+          test -f models/registry/registry.json
+      - id: meta
+        run: echo "image=ghcr.io/$(echo '${{ github.repository }}' | tr '[:upper:]' '[:lower:]')/phishshield-api" >> $GITHUB_OUTPUT
+      - name: Build image
+        run: docker build -f docker/Dockerfile.api -t ${{ steps.meta.outputs.image }}:${{ github.sha }} .
+      - name: Container smoke test
+        run: |
+          docker run -d --name api -p 8000:8000 ${{ steps.meta.outputs.image }}:${{ github.sha }}
+          for i in $(seq 1 30); do curl -sf localhost:8000/health && break; sleep 2; done
+          curl -sf -X POST localhost:8000/predict -H 'Content-Type: application/json' \
+               -d '{"url":"http://paypa1-secure-login.xyz/verify"}' | tee pred.json
+          grep -q phishing_probability pred.json
+          curl -sf localhost:8000/metrics | grep -q phishshield_predictions_total
+      - if: failure()
+        run: docker logs api
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Push to GitHub Container Registry
+        run: |
+          docker tag ${{ steps.meta.outputs.image }}:${{ github.sha }} ${{ steps.meta.outputs.image }}:latest
+          docker push ${{ steps.meta.outputs.image }}:${{ github.sha }}
+          docker push ${{ steps.meta.outputs.image }}:latest
+
+  deploy-render:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    env:
+      RENDER_DEPLOY_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK }}
+      RENDER_URL: ${{ secrets.RENDER_URL }}
+    steps:
+      - name: Redeploy on Render (free web service)
+        if: env.RENDER_DEPLOY_HOOK != ''
+        run: curl -fsS -X POST "$RENDER_DEPLOY_HOOK"
+      - name: Smoke test the public URL
+        if: env.RENDER_DEPLOY_HOOK != '' && env.RENDER_URL != ''
+        run: |
+          for i in $(seq 1 40); do curl -sf "$RENDER_URL/health" && break; sleep 15; done
+          curl -sf -X POST "$RENDER_URL/predict" -H 'Content-Type: application/json' \
+               -d '{"url":"http://paypa1-secure-login.xyz/verify"}'
+          echo "Live at $RENDER_URL" >> $GITHUB_STEP_SUMMARY
+      - name: Skipped
+        if: env.RENDER_DEPLOY_HOOK == ''
+        run: echo "RENDER_DEPLOY_HOOK not set - image is on GHCR; Render deployment skipped."

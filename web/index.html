@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PhishShield AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f6f7f9;--panel:#ffffff;--ink:#0f172a;--muted:#64748b;--line:#e2e8f0;
+  --accent:#0f766e;--accent-ink:#ffffff;--danger:#dc2626;--warn:#d97706;--ok:#16a34a;
+  --danger-bg:#fef2f2;--warn-bg:#fffbeb;--ok-bg:#f0fdf4;--shadow:0 1px 2px rgba(15,23,42,.06),0 8px 24px rgba(15,23,42,.06);
+}
+@media (prefers-color-scheme: dark){:root{
+  --bg:#0b1120;--panel:#111827;--ink:#e5e7eb;--muted:#94a3b8;--line:#1f2937;
+  --accent:#14b8a6;--accent-ink:#04201d;--danger-bg:#2a1215;--warn-bg:#2a1f0b;--ok-bg:#0c2414;--shadow:none;}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 Inter,system-ui,sans-serif}
+.wrap{max-width:880px;margin:0 auto;padding:32px 16px 64px}
+header{display:flex;align-items:center;gap:12px;margin-bottom:28px}
+.logo{width:38px;height:38px;border-radius:10px;background:var(--accent);display:grid;place-items:center}
+.logo svg{width:22px;height:22px;stroke:var(--accent-ink)}
+h1{font-size:20px;margin:0;letter-spacing:-.01em}
+header p{margin:0;color:var(--muted);font-size:13px}
+.ver{margin-left:auto;white-space:nowrap;font:500 12px "IBM Plex Mono",monospace;color:var(--muted);border:1px solid var(--line);padding:4px 10px;border-radius:999px}
+.ver i{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--muted);margin-right:6px}
+.ver.on i{background:var(--ok)}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px;box-shadow:var(--shadow);margin-bottom:16px}
+.tabs{display:flex;gap:4px;margin-bottom:14px}
+.tab{border:0;background:none;color:var(--muted);font:600 13px Inter;padding:6px 12px;border-radius:8px;cursor:pointer}
+.tab.active{background:var(--bg);color:var(--ink)}
+form{display:flex;gap:8px}
+input,textarea{flex:1;min-width:0;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:12px 14px;font:14px "IBM Plex Mono",monospace;outline:none}
+input:focus,textarea:focus{border-color:var(--accent)}
+textarea{min-height:120px;resize:vertical;width:100%}
+button.primary{background:var(--accent);color:var(--accent-ink);border:0;border-radius:10px;padding:0 20px;font:600 14px Inter;cursor:pointer;white-space:nowrap}
+button.primary:disabled{opacity:.6;cursor:wait}
+.examples{margin-top:10px;display:flex;flex-wrap:wrap;gap:6px;font-size:12px;color:var(--muted)}
+.chip{font:12px "IBM Plex Mono",monospace;border:1px solid var(--line);background:none;color:var(--muted);border-radius:999px;padding:3px 10px;cursor:pointer;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chip:hover{color:var(--ink);border-color:var(--muted)}
+.verdict{display:flex;align-items:center;gap:16px;padding:16px;border-radius:12px;margin-bottom:18px}
+.verdict.high{background:var(--danger-bg)}.verdict.medium{background:var(--warn-bg)}.verdict.low{background:var(--ok-bg)}
+.verdict .big{font-size:28px;font-weight:700;font-variant-numeric:tabular-nums}
+.verdict.high .big{color:var(--danger)}.verdict.medium .big{color:var(--warn)}.verdict.low .big{color:var(--ok)}
+.verdict .lbl{font-weight:600;text-transform:capitalize}
+.verdict .sub{color:var(--muted);font-size:13px;word-break:break-all}
+.meter{height:8px;background:var(--line);border-radius:99px;overflow:hidden;margin:6px 0 2px}
+.meter span{display:block;height:100%;border-radius:99px}
+h3{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:18px 0 10px}
+.url-viz{font:14px/2 "IBM Plex Mono",monospace;word-break:break-all;background:var(--bg);border-radius:10px;padding:10px 12px}
+.url-viz span{border-radius:4px;padding:2px 0}
+.bars .row{display:grid;grid-template-columns:170px 1fr 60px;gap:10px;align-items:center;font-size:13px;margin:6px 0}
+.bars .name{font-family:"IBM Plex Mono",monospace;color:var(--muted);overflow:hidden;text-overflow:ellipsis}
+.bars .track{height:8px;background:var(--line);border-radius:99px;position:relative}
+.bars .fill{position:absolute;top:0;height:100%;border-radius:99px}
+.bars .val{text-align:right;font-variant-numeric:tabular-nums}
+.fb{display:flex;gap:8px;align-items:center;margin-top:18px;font-size:13px;color:var(--muted)}
+.fb button{border:1px solid var(--line);background:none;color:var(--ink);border-radius:8px;padding:5px 10px;font:500 12px Inter;cursor:pointer}
+table{width:100%;border-collapse:collapse;font-size:13px}
+td,th{padding:8px 6px;border-bottom:1px solid var(--line);text-align:left}
+td.u{font-family:"IBM Plex Mono",monospace;word-break:break-all}
+.badge{font-size:11px;font-weight:600;padding:2px 8px;border-radius:99px;text-transform:uppercase}
+.badge.high{background:var(--danger-bg);color:var(--danger)}.badge.medium{background:var(--warn-bg);color:var(--warn)}.badge.low{background:var(--ok-bg);color:var(--ok)}
+.err{color:var(--danger);font-size:13px;margin-top:10px}
+footer{color:var(--muted);font-size:12px;text-align:center;margin-top:24px}
+.hidden{display:none}
+@media (max-width:560px){form{flex-direction:column}button.primary{padding:12px}.bars .row{grid-template-columns:110px 1fr 48px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="logo"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></div>
+    <div><h1>PhishShield AI</h1><p>Drift-aware hybrid transformer for phishing URL detection</p></div>
+    <span class="ver" id="ver"><i></i>connecting…</span>
+  </header>
+
+  <div class="card">
+    <div class="tabs">
+      <button class="tab active" data-tab="single">Check a URL</button>
+      <button class="tab" data-tab="batch">Batch</button>
+    </div>
+    <div id="tab-single">
+      <form id="f1"><input id="url" placeholder="Paste a URL, e.g. http://paypa1-secure-login.xyz/verify" autocomplete="off" required><button class="primary" id="go">Analyze</button></form>
+      <div class="examples">Try:
+        <button class="chip" type="button">http://paypa1-secure-login.xyz/verify.php</button>
+        <button class="chip" type="button">https://github.com/microsoft/vscode</button>
+        <button class="chip" type="button">http://192.168.12.4/banking/login.php</button>
+        <button class="chip" type="button">https://meezan-wallet-recovery.web.app/auth</button>
+      </div>
+    </div>
+    <div id="tab-batch" class="hidden">
+      <textarea id="urls" placeholder="One URL per line (max 1000)"></textarea>
+      <div style="margin-top:8px;display:flex;justify-content:flex-end"><button class="primary" id="go2" style="padding:10px 20px">Analyze all</button></div>
+    </div>
+    <div class="err" id="err"></div>
+  </div>
+
+  <div class="card hidden" id="result"></div>
+  <div class="card hidden" id="batchResult"></div>
+  <footer>PhishShield AI · FastAPI + ONNX Runtime · <a href="/docs" style="color:inherit">API docs</a> · <a href="/metrics" style="color:inherit">metrics</a></footer>
+</div>
+
+<script>
+const $ = s => document.querySelector(s);
+const colorFor = p => p >= .7 ? 'var(--danger)' : p >= .35 ? 'var(--warn)' : 'var(--ok)';
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+async function api(path, body){
+  const r = await fetch(path, {method: body ? 'POST' : 'GET', headers:{'Content-Type':'application/json'}, body: body ? JSON.stringify(body) : undefined});
+  if(!r.ok){ let m = r.statusText; try{ const j = await r.json(); m = typeof j.detail === 'string' ? j.detail : JSON.stringify(j.detail); }catch(e){} throw new Error(m); }
+  return r.json();
+}
+
+async function health(){
+  try{ const h = await api('/health'); const v = $('#ver');
+    v.innerHTML = '<i></i>' + (h.model_version ? 'model ' + esc(h.model_version) : 'no model'); v.classList.toggle('on', !!h.model_loaded);
+  }catch(e){ $('#ver').innerHTML = '<i></i>offline'; }
+}
+
+function highlight(url, segs){
+  const imp = {}; segs.forEach(s => { imp[s.segment] = s.importance; });
+  const max = Math.max(...segs.map(s => Math.abs(s.importance)), 1e-6);
+  return url.split(/([\/\.\-_?=&@:]+)/).filter(Boolean).map(part => {
+    const v = imp[part]; if(v === undefined) return esc(part);
+    const a = Math.min(Math.abs(v) / max, 1) * .55;
+    const bg = v > 0 ? `rgba(220,38,38,${a})` : `rgba(22,163,74,${a})`;
+    return `<span style="background:${bg}" title="${v > 0 ? '+' : ''}${v.toFixed(3)}">${esc(part)}</span>`;
+  }).join('');
+}
+
+function bars(feats){
+  const max = Math.max(...feats.map(f => Math.abs(f.importance)), 1e-6);
+  return feats.map(f => { const w = Math.abs(f.importance) / max * 50; const pos = f.importance >= 0;
+    return `<div class="row"><span class="name" title="${esc(f.feature)}">${esc(f.feature)}</span>
+      <div class="track"><div class="fill" style="left:${pos ? 50 : 50 - w}%;width:${w}%;background:${pos ? 'var(--danger)' : 'var(--ok)'}"></div></div>
+      <span class="val">${f.value}</span></div>`; }).join('');
+}
+
+async function analyze(url){
+  $('#err').textContent = ''; $('#go').disabled = true;
+  try{
+    const r = await api('/explain', {url});
+    const p = r.phishing_probability, lvl = p >= .7 ? 'high' : p >= .35 ? 'medium' : 'low';
+    $('#result').innerHTML = `
+      <div class="verdict ${lvl}"><div class="big">${(p*100).toFixed(1)}%</div>
+        <div style="flex:1;min-width:0"><div class="lbl">${esc(r.prediction)} · ${lvl} risk</div>
+        <div class="meter"><span style="width:${p*100}%;background:${colorFor(p)}"></span></div>
+        <div class="sub">${esc(r.url)}</div></div></div>
+      <h3>Which parts of the URL drove the decision</h3>
+      <div class="url-viz">${highlight(r.url, r.top_segments)}</div>
+      <h3>Top engineered-feature contributions · ${r.feature_method === 'shap' ? 'SHAP' : 'occlusion'} <span style="text-transform:none;letter-spacing:0">(red → phishing, green → legitimate)</span></h3>
+      <div class="bars">${bars(r.top_features)}</div>
+      <div class="fb">Was this wrong?
+        <button data-l="1">It is phishing</button><button data-l="0">It is legitimate</button><span id="fbmsg"></span></div>`;
+    $('#result').classList.remove('hidden'); $('#batchResult').classList.add('hidden');
+    $('#result').querySelectorAll('.fb button').forEach(b => b.onclick = async () => {
+      await api('/feedback', {url: r.url, label: +b.dataset.l}); $('#fbmsg').textContent = 'Thanks — saved for the next model update.'; });
+  }catch(e){ $('#err').textContent = e.message; }
+  finally{ $('#go').disabled = false; }
+}
+
+async function analyzeBatch(){
+  const urls = $('#urls').value.split('\n').map(s => s.trim()).filter(Boolean);
+  if(!urls.length) return; $('#err').textContent = ''; $('#go2').disabled = true;
+  try{
+    const r = await api('/predict/batch', {urls});
+    const n = r.predictions.filter(p => p.prediction === 'phishing').length;
+    $('#batchResult').innerHTML = `<h3 style="margin-top:0">${n} of ${r.predictions.length} flagged as phishing</h3>
+      <table><tr><th>URL</th><th>P(phish)</th><th>Risk</th></tr>${r.predictions.map(p =>
+      `<tr><td class="u">${esc(p.url)}</td><td>${(p.phishing_probability*100).toFixed(1)}%</td><td><span class="badge ${p.risk_level}">${p.risk_level}</span></td></tr>`).join('')}</table>`;
+    $('#batchResult').classList.remove('hidden'); $('#result').classList.add('hidden');
+  }catch(e){ $('#err').textContent = e.message; }
+  finally{ $('#go2').disabled = false; }
+}
+
+$('#f1').onsubmit = e => { e.preventDefault(); analyze($('#url').value); };
+$('#go2').onclick = analyzeBatch;
+document.querySelectorAll('.chip').forEach(c => c.onclick = () => { $('#url').value = c.textContent; analyze(c.textContent); });
+document.querySelectorAll('.tab').forEach(t => t.onclick = () => {
+  document.querySelectorAll('.tab').forEach(x => x.classList.toggle('active', x === t));
+  $('#tab-single').classList.toggle('hidden', t.dataset.tab !== 'single');
+  $('#tab-batch').classList.toggle('hidden', t.dataset.tab !== 'batch');
+});
+health();
+</script>
+</body>
+</html>

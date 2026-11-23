@@ -1,16 +1,4 @@
-"""DVC stage `validate`: data-quality gate that runs BEFORE any training.
-
-Checks (thresholds in params.yaml -> validation):
-  schema      required columns present, label is integer-like
-  nulls       null ratio in required columns <= max_null_ratio (null rows are dropped)
-  ranges      label in allowed_labels; URL length in [min_url_length, max_url_length];
-              URL has a scheme and host; each class >= min_class_ratio; enough rows
-  duplicates  duplicate-URL ratio <= max_duplicate_ratio (duplicates are dropped);
-              URLs with conflicting labels are dropped
-
-Writes reports/data_validation.json (also a DVC metric). Exits with code 1 if any hard check
-fails, which stops `dvc repro` before a model is trained on bad data.
-"""
+"""DVC stage `validate`: data-quality gate that runs BEFORE any training."""
 
 from __future__ import annotations
 
@@ -61,7 +49,6 @@ def validate(df: pd.DataFrame, cfg: dict) -> tuple[pd.DataFrame, dict]:
            mean=round(float(lengths.mean()), 2) if len(lengths) else None)
     df = df[~bad_len]
 
-    # PhiUSIIL stores some URLs without a scheme -> normalise rather than drop
     no_scheme = ~df["url"].str.contains("://", regex=False)
     df.loc[no_scheme, "url"] = "http://" + df.loc[no_scheme, "url"]
     bad_fmt = ~df["url"].str.match(URL_RE)

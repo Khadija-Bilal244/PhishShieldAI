@@ -1,0 +1,35 @@
+groups:
+  - name: phishshield
+    rules:
+      - alert: PhishShieldApiDown
+        expr: up{job="phishshield-api"} == 0
+        for: 1m
+        labels: {severity: critical}
+        annotations:
+          summary: "PhishShield API is down"
+
+      - alert: HighInferenceLatency
+        expr: histogram_quantile(0.95, sum(rate(phishshield_inference_seconds_bucket[5m])) by (le)) > 0.05
+        for: 5m
+        labels: {severity: warning}
+        annotations:
+          summary: "p95 inference latency above 50 ms"
+
+      - alert: PhishingRateShift
+        expr: |
+          abs(
+            sum(rate(phishshield_predictions_total{prediction="phishing"}[1h])) / sum(rate(phishshield_predictions_total[1h]))
+            -
+            sum(rate(phishshield_predictions_total{prediction="phishing"}[1d])) / sum(rate(phishshield_predictions_total[1d]))
+          ) > 0.2
+        for: 15m
+        labels: {severity: warning}
+        annotations:
+          summary: "Prediction distribution shifted (possible data drift) - run the drift monitor"
+
+      - alert: HighErrorRate
+        expr: sum(rate(http_requests_total{status=~"5.."}[5m])) / sum(rate(http_requests_total[5m])) > 0.05
+        for: 5m
+        labels: {severity: critical}
+        annotations:
+          summary: "More than 5% of API requests fail"

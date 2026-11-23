@@ -1,7 +1,4 @@
-"""Classical baselines (Logistic Regression, Random Forest, XGBoost) on engineered features.
-
-These are BASELINES ONLY - the primary model is the hybrid DistilBERT fusion model.
-"""
+"""Classical baselines (Logistic Regression, Random Forest, XGBoost) on engineered features."""
 
 from __future__ import annotations
 

@@ -1,4 +1,3 @@
-# CI: lint + unit tests on every push / pull request
 name: CI
 on:
   push:
@@ -22,6 +21,10 @@ jobs:
           pip install torch --index-url https://download.pytorch.org/whl/cpu
           pip install -r requirements-dev.txt
       - name: Lint
-        run: ruff check src tests
+        run: ruff check src tests airflow
       - name: Tests
-        run: pytest --cov=src/phishshield --cov-report=term
+        run: pytest --cov=src/phishshield --cov-report=term --cov-report=xml
+      - uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: coverage.xml

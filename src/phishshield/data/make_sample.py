@@ -1,21 +1,4 @@
-"""Synthetic, time-stamped phishing URL generator.
-
-Why synthetic data at all?
-  * The whole pipeline (DVC, CI, Docker, Airflow) can run offline in minutes.
-  * Each time period has a *controlled* mix of attack styles, so concept/data drift is
-    known in advance - this is what lets us evaluate drift detectors and update policies
-    fairly (the proposal states simulated shifts are reported separately from real data).
-
-Drift design (phishing side):
-  periods 0-2: IP-address hosts, '@' tricks, long keyword-stuffed subdomains, http
-  periods 3-5: typosquats, punycode/homoglyphs, URL shorteners, abuse of cloud hosting
-               (web.app, firebase, github.io ...), cheap new TLDs, mostly https
-Legitimate side also shifts (more SaaS/cloud apps, small sites on new TLDs, tracking params),
-and contains hard negatives (real login/OAuth pages, brand names in paths, shortened links).
-1.5% label noise mimics imperfect blocklist labels.
-
-For real data use `python -m phishshield.data.ingest` (data.source: real).
-"""
+"""Synthetic, time-stamped phishing URL generator."""
 
 from __future__ import annotations
 
@@ -67,9 +50,7 @@ WORDS = ["python", "data", "cloud", "music", "travel", "sports", "health", "fina
 TRACKING = ["utm_source=newsletter", "utm_medium=email", "utm_campaign=autumn", "ref=homepage",
             "fbclid={id}", "gclid={id}", "lang=en", "page={n}"]
 
-# attack-style probabilities per period (rows: period 0..5)
 PHISH_MIX = {
-    #               ip    at   kwsub long  typo  puny  short cloud newtld compromised
     0: np.array([0.22, 0.13, 0.27, 0.18, 0.07, 0.00, 0.00, 0.03, 0.00, 0.10]),
     1: np.array([0.19, 0.10, 0.27, 0.18, 0.09, 0.00, 0.01, 0.04, 0.01, 0.11]),
     2: np.array([0.15, 0.08, 0.25, 0.16, 0.12, 0.02, 0.02, 0.05, 0.02, 0.13]),
@@ -95,7 +76,7 @@ def _fill(t: str) -> str:
 def legit_url(period: int) -> str:
     scheme = "https" if random.random() < 0.85 + 0.02 * period else "http"
     r = random.random()
-    if r < 0.07:  # real login / OAuth pages contain "phishy" keywords and long tokens
+    if r < 0.07:
         return random.choice([
             f"https://accounts.google.com/signin/v2/identifier?continue=https%3A%2F%2Fmail.google.com&service=mail&flowName={_rid(10)}",
             f"https://login.microsoftonline.com/common/oauth2/authorize?client_id={_rid(32)}&response_type=code",
@@ -104,7 +85,7 @@ def legit_url(period: int) -> str:
             f"https://www.amazon.com/ap/signin?openid.return_to={_rid(24)}&openid.assoc_handle=usflex",
             f"https://secure.hbl.com/login/verify?session={_rid(20)}",
         ])
-    if r < 0.14:  # brand names in legitimate paths
+    if r < 0.14:
         brand = random.choice(BRANDS)
         return random.choice([
             f"https://github.com/{brand}/{random.choice(WORDS)}-{random.choice(WORDS)}",
@@ -112,12 +93,12 @@ def legit_url(period: int) -> str:
             f"https://medium.com/@{_rid(6).lower()}/{brand}-{random.choice(WORDS)}-{_rid(12).lower()}",
             f"https://www.reddit.com/r/{brand}/comments/{_rid(6).lower()}/account_{random.choice(WORDS)}",
         ])
-    if r < 0.14 + 0.10 + 0.03 * period:  # small businesses / personal sites, incl. new TLDs
+    if r < 0.14 + 0.10 + 0.03 * period:
         host = f"{random.choice(WORDS)}{random.choice(['', '-'])}{random.choice(WORDS)}.{random.choice(SMALL_TLDS)}"
         return f"{scheme}://{random.choice(['www.', ''])}{host}{_fill(random.choice(LEGIT_PATHS))}"
-    if r < 0.28 + 0.03 * period + 0.01 + 0.01 * period:  # legitimate shortened links
+    if r < 0.28 + 0.03 * period + 0.01 + 0.01 * period:
         return f"https://{random.choice(SHORTENERS)}/{_rid(random.randint(5, 8))}"
-    if random.random() < 0.03 + 0.03 * period:  # SaaS apps on cloud hosting (legit drift)
+    if random.random() < 0.03 + 0.03 * period:
         host = f"{random.choice(WORDS)}-{random.choice(WORDS)}.{random.choice(LEGIT_CLOUD)}"
     else:
         dom = random.choice(LEGIT_DOMAINS)
@@ -137,7 +118,7 @@ def _typo(brand: str) -> str:
     if op < 0.5 and b[i] in HOMOGLYPHS:
         b[i] = random.choice(HOMOGLYPHS[b[i]])
     elif op < 0.75:
-        b.insert(i, b[i])  # doubled letter
+        b.insert(i, b[i])
     else:
         b.pop(i) if len(b) > 4 else b.insert(i, "-")
     return "".join(b).replace("à", "a").replace("ò", "o").replace("è", "e").replace("í", "i")
@@ -177,13 +158,12 @@ def phish_url(period: int) -> str:
         if "/" in host:
             return f"https://{host}/{brand}-{word}-{_rid(5).lower()}"
         return f"https://{brand}-{word}-{_rid(4).lower()}.{host}{path}"
-    if style == "compromised":  # hacked small-business site, often no brand at all
+    if style == "compromised":
         site = f"{random.choice(WORDS)}{random.choice(WORDS)}.{random.choice(SMALL_TLDS)}"
         kit = random.choice(GENERIC) + random.choice(["", "-" + random.choice(GENERIC)])
         if random.random() < 0.3:
             kit = brand + "-" + kit
         return f"{scheme}://{random.choice(['www.', ''])}{site}/{random.choice(['wp-content/uploads', 'wp-includes', 'images', 'files'])}/{_rid(5).lower()}/{kit}{random.choice(['.php', '/', '.html', ''])}"
-    # newtld
     return f"{scheme}://{brand}{random.choice(['', '-', '.'])}{word}.{random.choice(NEW_TLDS)}{path}"
 
 

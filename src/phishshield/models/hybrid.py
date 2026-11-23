@@ -1,16 +1,4 @@
-"""PRIMARY MODEL - Hybrid DistilBERT + engineered-feature fusion network.
-
-            URL text ──> DistilBERT ──> [CLS] ──> Linear ──> h_t ─┐
-                                                                  ├─> gate g = σ(W[h_t; h_f])
-   engineered features ──> MLP ─────────────────────────> h_f ───┘     z = g·h_t + (1-g)·h_f
-                                                                         │
-                                                                    classifier ──> logit
-
-`mode` supports the ablations required in the proposal:
-    fusion        - full model (default)
-    text_only     - transformer branch only
-    features_only - feature branch only
-"""
+"""PRIMARY MODEL - Hybrid DistilBERT + engineered-feature fusion network."""
 
 from __future__ import annotations
 
@@ -28,8 +16,7 @@ class TextEncoder:
     """Wraps tokenizer + transformer so real and tiny (offline) encoders share one interface."""
 
     def __init__(self, pretrained_name: str, debug_tiny: bool, max_len: int, local_dir: str | None = None):
-        """local_dir: a saved `encoder/` folder (tokenizer + config). When given, the architecture is
-        rebuilt from the config without downloading anything; weights are then loaded from model.pt."""
+        """local_dir: a saved `encoder/` folder (tokenizer + config). When given, the architecture is rebuilt."""
         from transformers import AutoConfig, AutoModel, AutoTokenizer, DistilBertConfig, DistilBertModel
 
         self.debug_tiny = debug_tiny

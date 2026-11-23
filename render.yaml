@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: phishshield-api
+    runtime: image
+    plan: free
+    image:
+      url: ghcr.io/khadija-bilal244/phishshieldai/phishshield-api:latest
+    healthCheckPath: /health
+    envVars:
+      - key: PORT
+        value: "8000"
+      - key: ADMIN_TOKEN
+        generateValue: true

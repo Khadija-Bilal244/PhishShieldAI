@@ -1,9 +1,4 @@
-"""MLflow pyfunc wrapper so the hybrid model can be logged, registered and loaded with
-`mlflow.pyfunc.load_model("models:/phishshield-hybrid/Staging")`.
-
-Input : pandas DataFrame with a `url` column
-Output: DataFrame with `phishing_probability` and `prediction` (1 = phishing)
-"""
+"""MLflow pyfunc wrapper so the hybrid model can be logged, registered and loaded with."""
 
 from __future__ import annotations
 

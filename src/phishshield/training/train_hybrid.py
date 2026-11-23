@@ -1,11 +1,4 @@
-"""DVC stage `train_hybrid`: train the MAIN model (hybrid DistilBERT + engineered-feature fusion).
-
-Logged to MLflow: all hyper-parameters, per-epoch loss / validation metrics, test metrics,
-calibration (temperature, threshold), a training-curve figure, and the model itself as an
-MLflow pyfunc model (registered in the `register` stage).
-
-GPU strongly recommended for the real DistilBERT (Colab / Kaggle - see docs/SETUP.md).
-"""
+"""DVC stage `train_hybrid`: train the MAIN model (hybrid DistilBERT + engineered-feature fusion)."""
 
 from __future__ import annotations
 

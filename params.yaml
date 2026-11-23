@@ -1,18 +1,11 @@
-# ============================================================
-# PhishShield AI - all pipeline parameters (tracked by DVC).
-# Changing a value makes `dvc repro` re-run only the stages that use it.
-# ============================================================
-
 seed: 42
 
 data:
-  # phiusiil -> real PhiUSIIL Phishing URL Dataset (UCI, 2024), downloaded from its source
-  # sample   -> synthetic offline dataset (only for quick tests without internet)
   source: phiusiil
   url: https://archive.ics.uci.edu/static/public/967/phiusiil+phishing+url+dataset.zip
-  max_rows: 40000             # stratified subsample of the 235k URLs (keeps GPU/CPU time reasonable); null = all
-  sample_size: 12000          # only for source: sample
-  n_periods: 6                # only for source: sample
+  max_rows: 40000
+  sample_size: 12000
+  n_periods: 6
 
 validation:
   required_columns: [url, label]
@@ -20,13 +13,13 @@ validation:
   max_url_length: 2048
   allowed_labels: [0, 1]
   min_rows: 1000
-  min_class_ratio: 0.05       # each class must be at least 5% of the data
-  max_duplicate_ratio: 0.10   # fail if more than 10% of rows are duplicate URLs
-  max_null_ratio: 0.01        # fail if more than 1% of rows have nulls in required columns
+  min_class_ratio: 0.05
+  max_duplicate_ratio: 0.10
+  max_null_ratio: 0.01
 
 split:
   test_size: 0.15
-  val_size: 0.15              # stratified train / val / test = 70 / 15 / 15
+  val_size: 0.15
 
 baselines:
   logistic_regression:
@@ -42,10 +35,10 @@ baselines:
     subsample: 0.9
     colsample_bytree: 0.9
 
-hybrid:                       # MAIN MODEL: DistilBERT + engineered-feature gated fusion
+hybrid:
   pretrained_name: distilbert-base-uncased
-  debug_tiny: false           # true = 2-layer transformer built offline (CPU smoke tests only)
-  mode: fusion                # fusion | text_only | features_only
+  debug_tiny: false
+  mode: fusion
   max_len: 64
   batch_size: 32
   epochs: 3
@@ -54,14 +47,68 @@ hybrid:                       # MAIN MODEL: DistilBERT + engineered-feature gate
   weight_decay: 0.01
   fusion_dim: 128
   dropout: 0.1
-  max_train_samples: null     # cap training rows (e.g. 8000 on a CPU laptop); null = all
+  max_train_samples: null
   freeze_layers_partial: 4
 
 evaluation:
-  max_fnr: 0.15               # safety limit on false-negative rate used to pick the decision threshold
+  max_fnr: 0.15
 
 mlflow:
   experiment: phishshield-ai
   main_model_name: phishshield-hybrid
   baseline_model_name: phishshield-baseline-xgboost
   registry_stage: Staging
+
+ablation:
+  modes: [text_only, features_only]
+
+student:
+  max_len: 128
+  embed_dim: 32
+  num_filters: 64
+  kernel_sizes: [3, 5, 7]
+  epochs: 6
+  batch_size: 128
+  lr: 2.0e-3
+  temperature: 2.0
+  alpha: 0.5
+
+explain:
+  n_examples: 12
+  shap_background: 50
+  shap_samples: 300
+
+promotion:
+  primary_metric: f1
+  min_improvement: 0.0
+  max_recall_drop: 0.01
+  max_fnr: 0.15
+
+registry:
+  student_model_name: phishshield-student
+
+stream:
+  pool_size: 20000
+  n_batches: 8
+  batch_size: 600
+  max_new_style_share: 0.6
+
+drift:
+  psi_threshold: 0.2
+  ks_pvalue: 0.01
+  mmd_permutations: 200
+  max_samples: 1000
+  weights: {feature: 0.35, embedding: 0.35, performance: 0.30}
+  tiers:
+    recalibrate: 0.25
+    partial_finetune: 0.45
+    full_retrain: 0.65
+
+experiment:
+  fixed_schedule_every: 2
+
+live:
+  openphish_url: https://openphish.com/feed.txt
+  tranco_url: https://tranco-list.eu/top-1m.csv.zip
+  max_phishing: 1500
+  tranco_top_n: 1500

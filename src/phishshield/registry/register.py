@@ -1,16 +1,4 @@
-"""DVC stage `register`: register models in the MLflow Model Registry (DagsHub) and move the
-main model to the `Staging` stage.
-
-  phishshield-hybrid            <- main model (hybrid DistilBERT fusion)  -> stage: Staging
-  phishshield-baseline-xgboost  <- best baseline, kept for comparison     -> stage: None
-
-Each version gets a description and tags with its test metrics, git commit and data hash.
-Promotion to `Production` is deliberately a manual decision (done in the DagsHub/MLflow UI
-or with `--promote-production`) after the model is reviewed.
-
-    python -m phishshield.registry.register
-    python -m phishshield.registry.register --promote-production
-"""
+"""DVC stage `register`: register models in the MLflow Model Registry (DagsHub) and move the main."""
 
 from __future__ import annotations
 
@@ -36,7 +24,7 @@ def _set_stage(client, name: str, version: str, stage: str) -> str:
     applied = stage
     try:
         client.transition_model_version_stage(name, version, stage, archive_existing_versions=False)
-    except Exception as e:  # stages are deprecated in very new MLflow servers -> alias only
+    except Exception as e:
         log.warning("Stage transition not supported by server (%s); using alias only", e)
         applied = f"alias:{stage.lower()}"
     try:

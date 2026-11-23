@@ -1,7 +1,7 @@
 """Model tests with the tiny offline transformer (no downloads, CPU, seconds)."""
 
-import numpy as np  # pyright: ignore[reportMissingImports]
-import pytest  # pyright: ignore[reportMissingImports]
+import numpy as np
+import pytest
 
 torch = pytest.importorskip("torch")
 pytest.importorskip("transformers")
