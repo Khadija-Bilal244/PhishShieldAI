@@ -1,16 +1,4 @@
-"""DVC stage `ingest`: download the dataset from its source and write data/raw/urls.csv.
-
-Source: PhiUSIIL Phishing URL Dataset (Prasad & Chandra, 2024), UCI ML Repository #967
-        https://archive.ics.uci.edu/dataset/967/phiusiil+phishing+url+dataset
-        235,795 URLs (134,850 legitimate / 100,945 phishing).
-        NOTE: in PhiUSIIL label 1 = legitimate, 0 = phishing. We flip it so 1 = phishing.
-
-The dataset is a static, published snapshot, so re-running this stage from scratch always
-produces the same data (the SHA-256 of the download is recorded in reports/ingest.json).
-
-If the download is blocked, download the zip in a browser and put it at
-data/raw/phiusiil.zip (or the extracted CSV at data/raw/PhiUSIIL_Phishing_URL_Dataset.csv).
-"""
+"""DVC stage `ingest`: download the dataset from its source and write data/raw/urls.csv."""
 
 from __future__ import annotations
 
@@ -67,7 +55,7 @@ def to_schema(raw: pd.DataFrame) -> pd.DataFrame:
         raise ValueError(f"Unexpected PhiUSIIL columns: {list(raw.columns)[:10]} ...")
     return pd.DataFrame({
         "url": raw[cols["url"]].astype(str).str.strip(),
-        "label": 1 - pd.to_numeric(raw[cols["label"]], errors="coerce"),   # 1 = phishing
+        "label": 1 - pd.to_numeric(raw[cols["label"]], errors="coerce"),
         "source": "phiusiil",
     })
 

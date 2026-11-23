@@ -1,0 +1,44 @@
+{
+  "student_test": {
+    "accuracy": 0.9979993331110371,
+    "precision": 1.0,
+    "recall": 0.995323460639127,
+    "f1": 0.99765625,
+    "roc_auc": 0.9990210653207535,
+    "pr_auc": 0.999175345871421,
+    "fnr": 0.004676539360872954,
+    "fpr": 0.0,
+    "tp": 2554,
+    "fp": 0,
+    "tn": 3432,
+    "fn": 12
+  },
+  "teacher_test": {
+    "accuracy": 0.9979993331110371,
+    "precision": 1.0,
+    "recall": 0.995323460639127,
+    "f1": 0.99765625,
+    "roc_auc": 0.9988749234657264,
+    "pr_auc": 0.999105409929471,
+    "fnr": 0.004676539360872954,
+    "fpr": 0.0,
+    "tp": 2554,
+    "fp": 0,
+    "tn": 3432,
+    "fn": 12
+  },
+  "teacher_student_agreement": 1.0,
+  "onnx_max_abs_error": 5.7220458984375e-06,
+  "student_params": 51713,
+  "teacher_params": 66514945,
+  "compression_ratio": 1286.2325720805213,
+  "latency_ms": {
+    "teacher_torch": 48.76518999953987,
+    "student_onnx_cpu": 0.1499979998334311
+  },
+  "speedup": 325.10560176597255,
+  "onnx_size_mb": 0.20938,
+  "temperature": 1.02758445497984,
+  "threshold": 0.49999999999999994,
+  "train_time_s": 39.67789589999302
+}

@@ -15,7 +15,7 @@ def _df(n=1200):
 def test_phiusiil_label_is_flipped_to_phishing_equals_1():
     raw = pd.DataFrame({"FILENAME": ["a", "b"], "URL": ["https://good.com", "http://bad.xyz"], "label": [1, 0]})
     out = to_schema(raw)
-    assert out["label"].tolist() == [0, 1]          # PhiUSIIL: 1 = legit  ->  ours: 1 = phishing
+    assert out["label"].tolist() == [0, 1]
     assert list(out.columns) == ["url", "label", "source"]
 
 

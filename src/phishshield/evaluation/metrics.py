@@ -27,7 +27,7 @@ def classification_metrics(y_true, prob, threshold: float = 0.5) -> dict[str, fl
         "f1": f1_score(y_true, pred, zero_division=0),
         "roc_auc": roc_auc_score(y_true, prob) if both else float("nan"),
         "pr_auc": average_precision_score(y_true, prob) if both else float("nan"),
-        "fnr": fn / max(fn + tp, 1),   # missed phishing - the most dangerous error
+        "fnr": fn / max(fn + tp, 1),
         "fpr": fp / max(fp + tn, 1),
         "tp": int(tp), "fp": int(fp), "tn": int(tn), "fn": int(fn),
     }

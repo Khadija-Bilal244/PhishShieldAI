@@ -1,10 +1,4 @@
-"""DVC stage `evaluate`: compare the baselines with the main hybrid model on the held-out TEST set.
-
-Outputs (also logged as artifacts of an MLflow `evaluation` run):
-  reports/metrics.json            DVC metrics (`dvc metrics show` / `dvc metrics diff`)
-  reports/model_comparison.md     table for the write-up
-  reports/figures/roc_curves.png, confusion_matrices.png
-"""
+"""DVC stage `evaluate`: compare the baselines with the main hybrid model on the held-out TEST set."""
 
 from __future__ import annotations
 

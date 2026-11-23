@@ -1,0 +1,62 @@
+name: Drift Monitor
+on:
+  schedule:
+    - cron: "30 3 * * *"      # 03:30 UTC = 08:30 PKT
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    env:
+      DAGSHUB_USERNAME: ${{ secrets.DAGSHUB_USERNAME }}
+      DAGSHUB_TOKEN: ${{ secrets.DAGSHUB_TOKEN }}
+      PHISHSHIELD_DISABLE_MLFLOW: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11", cache: pip}
+      - name: Install
+        run: |
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+          pip install -r requirements.txt
+          pip install -e .
+      - name: Pull champion model, teacher and reference data
+        run: |
+          dvc remote modify origin --local auth basic
+          dvc remote modify origin --local user "$DAGSHUB_USERNAME"
+          dvc remote modify origin --local password "$DAGSHUB_TOKEN"
+          dvc pull models/registry.dvc train_hybrid featurize
+      - name: Collect live data + drift check
+        id: drift
+        run: |
+          python -m phishshield.data.collect_live
+          BATCH=data/live/$(python -c "import json;print(json.load(open('data/live/latest.json'))['file'])")
+          python -m phishshield.drift.monitor --batch "$BATCH"
+          python - <<'PY' >> $GITHUB_OUTPUT
+          import json
+          d = json.load(open("reports/drift/latest.json"))
+          print(f"action={d['decision']['action']}")
+          print(f"risk={d['decision']['risk']:.3f}")
+          print(f"f1={(d.get('performance') or {}).get('f1', float('nan')):.4f}")
+          PY
+      - name: Summary
+        run: |
+          echo "### Live drift check: risk=${{ steps.drift.outputs.risk }}, action **${{ steps.drift.outputs.action }}**, live F1 ${{ steps.drift.outputs.f1 }}" >> $GITHUB_STEP_SUMMARY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: drift-report
+          path: |
+            reports/drift
+            data/live/*.csv
+      - name: Open issue when an update is recommended
+        if: steps.drift.outputs.action != 'none'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue create \
+            --title "Drift: ${{ steps.drift.outputs.action }} recommended (risk ${{ steps.drift.outputs.risk }})" \
+            --body "Daily live check recommends **${{ steps.drift.outputs.action }}** (live F1 ${{ steps.drift.outputs.f1 }}). Download the drift-report artifact of run ${{ github.run_id }} and run \`python -m phishshield.pipeline.update --batch <live csv>\` (or let the Airflow DAG do it)."

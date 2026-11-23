@@ -1,9 +1,4 @@
-"""Character-level URL tokenizer (numpy only).
-
-Used by (1) the distilled CharCNN student, which is what the API serves through ONNX,
-and (2) the `debug_tiny` DistilBERT encoder that runs offline without downloading a
-pretrained vocabulary.
-"""
+"""Character-level URL tokenizer (numpy only)."""
 
 from __future__ import annotations
 

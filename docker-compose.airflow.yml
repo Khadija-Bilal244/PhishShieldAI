@@ -1,0 +1,33 @@
+services:
+  airflow:
+    build:
+      context: .
+      dockerfile: airflow/Dockerfile
+    container_name: phishshield-airflow
+    command: standalone
+    user: "${AIRFLOW_UID:-50000}:0"
+    ports:
+      - "8080:8080"
+    environment:
+      - AIRFLOW__CORE__LOAD_EXAMPLES=False
+      - AIRFLOW__CORE__DAGS_FOLDER=/opt/phishshield/airflow/dags
+      - PHISHSHIELD_ROOT=/opt/phishshield
+      - PHISHSHIELD_API_URL=http://phishshield-api:8000
+      - PHISHSHIELD_TINY=${PHISHSHIELD_TINY:-0}
+      - MLFLOW_TRACKING_URI=${MLFLOW_TRACKING_URI}
+      - MLFLOW_TRACKING_USERNAME=${MLFLOW_TRACKING_USERNAME}
+      - MLFLOW_TRACKING_PASSWORD=${MLFLOW_TRACKING_PASSWORD}
+      - ADMIN_TOKEN=${ADMIN_TOKEN:?ADMIN_TOKEN must be set in .env}
+      - PYTHONPATH=/opt/phishshield/src
+    volumes:
+      - .:/opt/phishshield
+      - airflow-home:/opt/airflow
+    networks: [phishnet]
+
+volumes:
+  airflow-home:
+
+networks:
+  phishnet:
+    name: phishnet
+    external: true

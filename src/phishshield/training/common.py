@@ -16,8 +16,8 @@ from phishshield.features.lexical import FEATURE_NAMES
 @dataclass
 class Split:
     urls: list[str]
-    X: np.ndarray          # raw engineered features
-    Xs: np.ndarray         # scaled engineered features (input to neural models)
+    X: np.ndarray
+    Xs: np.ndarray
     y: np.ndarray
 
     def __len__(self) -> int:

@@ -1,8 +1,4 @@
-"""DVC stage `train_baselines`: Logistic Regression, Random Forest and XGBoost on engineered features.
-
-Each model is one MLflow run (params, validation metrics, the fitted model as an MLflow sklearn
-model). Run IDs are written to reports/runs/baselines.json for the `register` stage.
-"""
+"""DVC stage `train_baselines`: Logistic Regression, Random Forest and XGBoost on engineered features."""
 
 from __future__ import annotations
 

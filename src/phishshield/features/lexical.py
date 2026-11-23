@@ -1,8 +1,4 @@
-"""Engineered lexical / host-based URL features.
-
-Pure Python + numpy (no network calls, no torch) so the exact same code runs in
-training, in the FastAPI container and in tests -> no training/serving skew.
-"""
+"""Engineered lexical / host-based URL features."""
 
 from __future__ import annotations
 
@@ -70,7 +66,6 @@ def extract(url: str) -> dict[str, float]:
     letters = [c for c in host if c.isalpha()]
 
     brand_hits = [b for b in BRANDS if b in low]
-    # brand appears in the URL but the registered domain is not that brand (e.g. paypal-login.xyz, x.com/paypal)
     brand_mismatch = float(any(registered.split(".")[0] != b for b in brand_hits)) if brand_hits else 0.0
     mix = sum(1 for a, b in zip(host, host[1:]) if a.isalpha() != b.isalpha() and (a.isdigit() or b.isdigit()))
 

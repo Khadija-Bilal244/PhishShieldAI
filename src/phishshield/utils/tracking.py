@@ -1,14 +1,4 @@
-"""MLflow tracking helpers (remote DagsHub server).
-
-Credentials are read from the environment or from `.env` in the project root:
-    MLFLOW_TRACKING_URI=https://dagshub.com/<user>/<repo>.mlflow
-    MLFLOW_TRACKING_USERNAME=<user>
-    MLFLOW_TRACKING_PASSWORD=<dagshub token>
-
-Every run is tagged with the git commit, the DVC data hash (SHA-256 from the ingest stage)
-and the pipeline stage, so any MLflow run can be traced back to the exact code + data.
-Set PHISHSHIELD_DISABLE_MLFLOW=1 to switch tracking off (unit tests / CI).
-"""
+"""MLflow tracking helpers (remote DagsHub server)."""
 
 from __future__ import annotations
 
@@ -27,7 +17,7 @@ try:
     import mlflow
 
     _HAS_MLFLOW = True
-except ImportError:  # pragma: no cover
+except ImportError:
     mlflow = None
     _HAS_MLFLOW = False
 
@@ -35,7 +25,7 @@ try:
     from dotenv import load_dotenv
 
     load_dotenv(ROOT / ".env")
-except ImportError:  # pragma: no cover
+except ImportError:
     pass
 
 
@@ -104,7 +94,7 @@ def log_metrics(metrics: dict[str, float], prefix: str = "", step: int | None = 
     if not tracking_enabled() or mlflow.active_run() is None:
         return
     clean = {f"{prefix}{k}": float(v) for k, v in metrics.items()
-             if isinstance(v, (int, float)) and v == v}  # skip NaN
+             if isinstance(v, (int, float)) and v == v}
     mlflow.log_metrics(clean, step=step)
 
 
@@ -113,7 +103,7 @@ def log_artifact(path: str, artifact_path: str | None = None) -> None:
         return
     try:
         mlflow.log_artifact(path, artifact_path=artifact_path)
-    except Exception as e:  # never let an upload hiccup kill a training run
+    except Exception as e:
         log.warning("Could not upload artifact %s: %s", path, e)
 
 

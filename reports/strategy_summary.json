@@ -1,0 +1,40 @@
+{
+  "static": {
+    "mean_precision": 0.7411189833239866,
+    "mean_recall": 0.9955506435927417,
+    "mean_f1": 0.8418629600404492,
+    "worst_f1": 0.7172619047619048,
+    "mean_roc_auc": 0.8981709820091135,
+    "mean_fnr": 0.00444935640725819,
+    "n_updates": 0,
+    "applied_updates": {},
+    "total_update_cost_s": 6.200001735123806e-06
+  },
+  "fixed_schedule": {
+    "mean_precision": 0.8747209648145904,
+    "mean_recall": 0.9863239535024768,
+    "mean_f1": 0.926073272875087,
+    "worst_f1": 0.8686514886164624,
+    "mean_roc_auc": 0.9848916643718807,
+    "mean_fnr": 0.01367604649752322,
+    "n_updates": 4,
+    "applied_updates": {
+      "full_retrain": 4
+    },
+    "total_update_cost_s": 191.7908598999984
+  },
+  "tiered_drift_aware": {
+    "mean_precision": 0.8598713759783712,
+    "mean_recall": 0.9704502025566282,
+    "mean_f1": 0.908140159403537,
+    "worst_f1": 0.8286189683860233,
+    "mean_roc_auc": 0.9540462409059075,
+    "mean_fnr": 0.029549797443371738,
+    "n_updates": 6,
+    "applied_updates": {
+      "recalibrate": 4,
+      "partial_finetune": 1
+    },
+    "total_update_cost_s": 13.642955600002097
+  }
+}
