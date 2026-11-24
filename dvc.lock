@@ -478,6 +478,11 @@ stages:
         registry:
           student_model_name: phishshield-student
     outs:
+    - path: models/registry
+      hash: md5
+      md5: 8ca7bdebe05c3944fabb5d58a5a57760.dir
+      size: 429367
+      nfiles: 6
     - path: reports/promotion.json
       hash: md5
       md5: a266f39eebe95a4c38999ca9cbaba86a

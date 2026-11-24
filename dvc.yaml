@@ -211,7 +211,6 @@ stages:
     plots:
       - reports/figures/shap_summary.png:
           cache: false
-
   promote:
     desc: Register the student, validate vs champion, promote (MLflow Production) or reject (Archived)
     cmd: python -m phishshield.registry.promote
@@ -223,10 +222,11 @@ stages:
     params:
       - promotion
       - registry
+    outs:
+      - models/registry
     metrics:
       - reports/promotion.json:
           cache: false
-
   build_stream:
     desc: Reproducible drift stream - unseen PhiUSIIL URLs + growing share of new attack styles
     cmd: python -m phishshield.data.build_stream
