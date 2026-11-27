@@ -7,8 +7,10 @@
 | `No champion model yet` | Run `dvc repro` (the `promote` stage) or `dvc pull` |
 | Warning *"logging to LOCAL"* | `.env` is not filled in, so MLflow isn't pointing to DagsHub |
 | `dvc push` 401/403 | Re-run the `dvc remote modify origin --local user/password` lines with a valid token |
+| Drift Monitor says `models/registry.dvc` does not exist | The registry is a `dvc.yaml` output at `models/registry`, not a `.dvc` pointer file. Pull the `models/registry` target instead. |
 | CUDA out of memory (Colab) | `hybrid.batch_size: 16` in `params.yaml`. **Note:** this changes `train_hybrid`, so it retrains. Prefer a fresh Colab session |
 | `collect_live` fails | Download manually into `data/live/manual/openphish.txt` and `data/live/manual/tranco.csv` (see docs/02) |
+| DVC pull reports `401 Unauthorized` from DagsHub | Replace the `DAGSHUB_TOKEN` GitHub Actions secret with a valid DagsHub access token and verify `DAGSHUB_USERNAME` is the matching DagsHub account name. |
 | MLflow stage transition warning | Keep `mlflow<3` from `requirements.txt` |
 | Docker build: `models/registry not found` | Run `dvc pull` (or `dvc repro`) before building |
 | API shows an old model after an update | `POST /admin/reload` with header `X-Admin-Token` |
