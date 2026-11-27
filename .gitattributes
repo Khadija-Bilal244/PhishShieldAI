@@ -1,6 +1,12 @@
-*.py text eol=lf
+﻿*.py text eol=lf
 *.yaml text eol=lf
 *.yml text eol=lf
 *.ipynb text eol=lf
 *.sh text eol=lf
 *.html text eol=lf
+
+# Keep DVC-tracked text report outputs byte-identical across Windows and Linux.
+reports/*.json text eol=lf
+reports/*.md text eol=lf
+reports/**/*.json text eol=lf
+reports/**/*.md text eol=lf
