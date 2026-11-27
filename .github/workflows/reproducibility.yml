@@ -1,4 +1,6 @@
+
 name: Reproducibility
+
 on:
   push:
     branches: [main]
@@ -8,17 +10,22 @@ on:
 jobs:
   check:
     runs-on: ubuntu-latest
+
     env:
       DAGSHUB_USERNAME: ${{ secrets.DAGSHUB_USERNAME }}
       DAGSHUB_TOKEN: ${{ secrets.DAGSHUB_TOKEN }}
+
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
           cache: pip
+
       - name: Install DVC
         run: pip install "dvc>=3.50"
+
       - name: Verify DagsHub secrets are available
         shell: bash
         run: |
@@ -33,16 +40,19 @@ jobs:
           fi
 
           echo "Both DagsHub secrets are available."
+
       - name: Pull versioned data + models from DagsHub
         run: |
           dvc remote modify origin --local auth basic
           dvc remote modify origin --local user "$DAGSHUB_USERNAME"
           dvc remote modify origin --local password "$DAGSHUB_TOKEN"
           dvc pull -v
+
       - name: Pipeline must be up to date (fully reproducible state)
         run: |
           dvc status | tee status.txt
           grep -q "Data and pipelines are up to date" status.txt
+
       - name: Metrics to job summary
         run: |
           echo "## Metrics of this commit" >> $GITHUB_STEP_SUMMARY
