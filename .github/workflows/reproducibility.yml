@@ -14,14 +14,25 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
-        with: {python-version: "3.11", cache: pip}
-      - name: Check DagsHub credentials
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Install DVC
+        run: pip install "dvc>=3.50"
+      - name: Verify DagsHub secrets are available
+        shell: bash
         run: |
-          if [ -z "$DAGSHUB_USERNAME" ] || [ -z "$DAGSHUB_TOKEN" ]; then
-            echo "::error::DagsHub credentials are missing. Add DAGSHUB_USERNAME and DAGSHUB_TOKEN under Settings > Secrets and variables > Actions."
+          if [ -z "$DAGSHUB_USERNAME" ]; then
+            echo "::error::DAGSHUB_USERNAME is missing or empty"
             exit 1
           fi
-      - run: pip install "dvc>=3.50"
+
+          if [ -z "$DAGSHUB_TOKEN" ]; then
+            echo "::error::DAGSHUB_TOKEN is missing or empty"
+            exit 1
+          fi
+
+          echo "Both DagsHub secrets are available."
       - name: Pull versioned data + models from DagsHub
         run: |
           dvc remote modify origin --local auth basic
