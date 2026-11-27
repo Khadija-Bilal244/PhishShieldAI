@@ -47,7 +47,7 @@ jobs:
           grep -q phishing_probability pred.json
           curl -sf localhost:8000/metrics | grep -q phishshield_predictions_total
       - if: failure()
-        run: docker logs api
+        run: docker logs api || true
       - uses: docker/login-action@v3
         with:
           registry: ghcr.io
