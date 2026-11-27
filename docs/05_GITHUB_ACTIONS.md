@@ -9,7 +9,7 @@
 
 ## Setup (repo owner, once)
 
-1. GitHub repo → **Settings → Secrets and variables → Actions → New repository secret**:
+1. GitHub repo → **Settings → Secrets and variables → Actions → New repository secret**. Add these exact names (the values come from the DagsHub account and Render service):
    - `DAGSHUB_USERNAME`
    - `DAGSHUB_TOKEN`
    - `RENDER_DEPLOY_HOOK`, `RENDER_URL` (free Render deployment, see docs/06)

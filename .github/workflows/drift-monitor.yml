@@ -19,6 +19,12 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with: {python-version: "3.11", cache: pip}
+      - name: Check DagsHub credentials
+        run: |
+          if [ -z "$DAGSHUB_USERNAME" ] || [ -z "$DAGSHUB_TOKEN" ]; then
+            echo "::error::DagsHub credentials are missing. Add DAGSHUB_USERNAME and DAGSHUB_TOKEN under Settings > Secrets and variables > Actions."
+            exit 1
+          fi
       - name: Install
         run: |
           pip install torch --index-url https://download.pytorch.org/whl/cpu
